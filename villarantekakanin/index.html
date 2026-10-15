@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villarante's Kakanin - Authentic Filipino Kakanin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <a href="index.html" class="brand" aria-label="Villarante's Kakanin Home">
+                <span class="brand-icon" aria-hidden="true">🍚</span>
+                <span class="brand-text">Villarante's Kakanin</span>
+            </a>
+
+            <button class="hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+                <span class="hamburger-line" aria-hidden="true"></span>
+                <span class="hamburger-line" aria-hidden="true"></span>
+                <span class="hamburger-line" aria-hidden="true"></span>
+            </button>
+
+            <ul id="nav-menu" class="nav-menu" role="menubar">
+                <li role="none"><a href="index.html" class="nav-link active" role="menuitem">Home</a></li>
+                <li role="none"><a href="menu.html" class="nav-link" role="menuitem">Menu</a></li>
+                <li role="none"><a href="about.html" class="nav-link" role="menuitem">About</a></li>
+                <li role="none"><a href="contact.html" class="nav-link" role="menuitem">Contact</a></li>
+                <li role="none"><a href="login.html" class="nav-link nav-login" role="menuitem">Login</a></li>
+                <li role="none"><a href="signup.html" class="nav-link nav-signup" role="menuitem">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="hero-title" style="background-image: url('images/bibingka.jpg');">
+            <div class="hero-overlay" aria-hidden="true"></div>
+            <div class="hero-content">
+                <h1 id="hero-title" class="hero-title">Experience the Taste of Tradition</h1>
+                <p class="hero-subtitle">Handcrafted Filipino rice delicacies made with love and generations-old recipes</p>
+                <div class="hero-actions">
+                    <a href="menu.html" class="btn btn-primary">Explore Our Menu</a>
+                    <a href="contact.html" class="btn btn-secondary">Place Pre-Order</a>
+                </div>
+            </div>
+            <div class="hero-scroll-indicator" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </section>
+
+        <section class="features-section" aria-labelledby="features-title">
+            <div class="container">
+                <header class="section-header fade-in">
+                    <h2 id="features-title" class="section-title">Freshly Made, Ready for Pickup</h2>
+                    <p class="section-subtitle">Order your favorite kakanin online and enjoy fresh, warm delicacies at your convenience</p>
+                </header>
+
+                <div class="feature-row">
+                    <article class="feature-card fade-in stagger-1">
+                        <div class="feature-icon" aria-hidden="true">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Freshly Made Daily</h3>
+                        <p class="feature-description">Every kakanin is prepared fresh each morning using time-honored methods.</p>
+                    </article>
+                    <article class="feature-card fade-in stagger-2">
+                        <div class="feature-icon" aria-hidden="true">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                                <path d="M8 21h8M12 17v4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Easy Online Pre-Order</h3>
+                        <p class="feature-description">Browse our menu, select your favorites, and order in just a few clicks.</p>
+                    </article>
+                    <article class="feature-card fade-in stagger-3">
+                        <div class="feature-icon" aria-hidden="true">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Pickup at Your Convenience</h3>
+                        <p class="feature-description">Choose a pickup time that fits your schedule—warm and ready when you arrive.</p>
+                    </article>
+                </div>
+
+                <div class="section-cta">
+                    <a href="contact.html" class="btn btn-primary">Start Your Pre-Order</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-section" aria-labelledby="featured-title">
+            <div class="container">
+                <header class="section-header fade-in">
+                    <h2 id="featured-title" class="section-title">Featured Kakanin</h2>
+                    <p class="section-subtitle">Our most beloved delicacies, handcrafted with care</p>
+                </header>
+
+                <div class="product-grid">
+                    <article class="product-card slide-up stagger-1">
+                        <div class="product-image" aria-hidden="true">
+                            <img src="images/bibingka.jpg" alt="Bibingka - Traditional baked rice cake with salted egg and cheese topping" loading="lazy">
+                        </div>
+                        <div class="product-content">
+                            <h3 class="product-name">Bibingka</h3>
+                            <p class="product-description">Traditional baked rice cake with salted egg and cheese topping</p>
+                            <div class="product-footer">
+                                <span class="product-price">₱45.00</span>
+                                <button class="btn btn-sm btn-primary add-to-cart" type="button" data-product="Bibingka" data-price="45">Add to Order</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="product-card slide-up stagger-2">
+                        <div class="product-image" aria-hidden="true">
+                            <img src="images/puto.jpg" alt="Puto - Soft, fluffy steamed rice muffins" loading="lazy">
+                        </div>
+                        <div class="product-content">
+                            <h3 class="product-name">Puto</h3>
+                            <p class="product-description">Soft, fluffy steamed rice muffins—perfect for breakfast or merienda</p>
+                            <div class="product-footer">
+                                <span class="product-price">₱25.00</span>
+                                <button class="btn btn-sm btn-primary add-to-cart" type="button" data-product="Puto" data-price="25">Add to Order</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="product-card slide-up stagger-3">
+                        <div class="product-image" aria-hidden="true">
+                            <img src="images/suman.jpg" alt="Suman - Glutinous rice rolls wrapped in banana leaves" loading="lazy">
+                        </div>
+                        <div class="product-content">
+                            <h3 class="product-name">Suman</h3>
+                            <p class="product-description">Glutinous rice rolls wrapped in banana leaves, served with latik</p>
+                            <div class="product-footer">
+                                <span class="product-price">₱30.00</span>
+                                <button class="btn btn-sm btn-primary add-to-cart" type="button" data-product="Suman" data-price="30">Add to Order</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="product-card slide-up stagger-4">
+                        <div class="product-image" aria-hidden="true">
+                            <img src="images/kutsinta.jpg" alt="Kutsinta - Brown rice cake with grated coconut" loading="lazy">
+                        </div>
+                        <div class="product-content">
+                            <h3 class="product-name">Kutsinta</h3>
+                            <p class="product-description">Brown rice cake with grated coconut, sweet and chewy</p>
+                            <div class="product-footer">
+                                <span class="product-price">₱35.00</span>
+                                <button class="btn btn-sm btn-primary add-to-cart" type="button" data-product="Kutsinta" data-price="35">Add to Order</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="section-cta">
+                    <a href="menu.html" class="btn btn-outline">View Full Menu</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="why-choose" aria-labelledby="why-choose-title">
+            <div class="container">
+                <header class="section-header fade-in">
+                    <h2 id="why-choose-title" class="section-title">Why Choose Villarante's Kakanin?</h2>
+                </header>
+
+                <div class="why-grid">
+                    <article class="why-card fade-in stagger-1">
+                        <h3 class="why-title">Authentic Recipes</h3>
+                        <p class="why-description">Made with love using generations-old recipes passed down from our family.</p>
+                    </article>
+                    <article class="why-card fade-in stagger-2">
+                        <h3 class="why-title">Quality Ingredients</h3>
+                        <p class="why-description">We use only the freshest local ingredients for the best taste and texture.</p>
+                    </article>
+                    <article class="why-card fade-in stagger-3">
+                        <h3 class="why-title">Convenient Pre-Order</h3>
+                        <p class="why-description">Order online and pick up fresh and warm at your scheduled time.</p>
+                    </article>
+                    <article class="why-card fade-in stagger-4">
+                        <h3 class="why-title">Variety of Choices</h3>
+                        <p class="why-description">From bibingka to biko, we offer a wide selection of traditional kakanin.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials-section" aria-labelledby="testimonials-title">
+            <div class="container">
+                <header class="section-header fade-in">
+                    <h2 id="testimonials-title" class="section-title">What Our Customers Say</h2>
+                    <p class="section-subtitle">Trusted by families across Metro Manila for authentic kakanin</p>
+                </header>
+
+                <div class="testimonials-grid">
+                    <article class="testimonial-card slide-up stagger-1">
+                        <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        </div>
+                        <p class="testimonial-text">"The bibingka here tastes exactly like my lola's! The salted egg and cheese topping is perfectly balanced. We order every Christmas season."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">MC</div>
+                            <div class="author-info">
+                                <span class="author-name">Maria Cruz</span>
+                                <span class="author-location">Quezon City</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="testimonial-card slide-up stagger-2">
+                        <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        </div>
+                        <p class="testimonial-text">"Best puto in Manila! So fluffy and not too sweet. The pre-order system is super convenient—just pick up on my way to work."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">JR</div>
+                            <div class="author-info">
+                                <span class="author-name">Juan Reyes</span>
+                                <span class="author-location">Makati</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="testimonial-card slide-up stagger-3">
+                        <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        </div>
+                        <p class="testimonial-text">"Their suman with latik brings back childhood memories. Fresh, warm, and wrapped in real banana leaves. Highly recommend!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">AS</div>
+                            <div class="author-info">
+                                <span class="author-name">Ana Santos</span>
+                                <span class="author-location">Pasig</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter-section" aria-labelledby="newsletter-title">
+            <div class="container">
+                <div class="newsletter-content fade-in">
+                    <div class="newsletter-text">
+                        <h2 id="newsletter-title" class="newsletter-title">Stay Updated</h2>
+                        <p class="newsletter-description">Get notified about seasonal specials, new products, and exclusive offers delivered straight to your inbox.</p>
+                    </div>
+                    <form class="newsletter-form" action="#" method="POST">
+                        <div class="newsletter-input-group">
+                            <label for="newsletter-email" class="visually-hidden">Email address</label>
+                            <input type="email" id="newsletter-email" name="email" placeholder="Enter your email" required autocomplete="email">
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </div>
+                        <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="brand brand-footer" aria-label="Villarante's Kakanin Home">
+                        <span class="brand-icon" aria-hidden="true">🍚</span>
+                        <span class="brand-text">Villarante's Kakanin</span>
+                    </a>
+                    <p class="footer-tagline">Authentic Filipino rice delicacies made with generations-old recipes and the finest local ingredients.</p>
+                    <div class="social-links" role="list" aria-label="Social media links">
+                        <a href="#" class="social-link" aria-label="Facebook" role="listitem">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram" role="listitem">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter" role="listitem">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-heading">Visit Us</h4>
+                    <address class="footer-address">
+                        <p>123 Kakanin Street, Barangay Poblacion</p>
+                        <p>Manila, Metro Manila 1000</p>
+                        <p>Philippines</p>
+                    </address>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-heading">Hours</h4>
+                    <dl class="footer-hours">
+                        <dt>Monday – Friday</dt>
+                        <dd>6:00 AM – 7:00 PM</dd>
+                        <dt>Saturday</dt>
+                        <dd>6:00 AM – 5:00 PM</dd>
+                        <dt>Sunday</dt>
+                        <dd>7:00 AM – 3:00 PM</dd>
+                    </dl>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-contact">
+                        <li><a href="tel:+6321234567">📞 +63 2 123 4567</a></li>
+                        <li><a href="mailto:orders@villaranteskakanin.com">✉️ orders@villaranteskakanin.com</a></li>
+                        <li><a href="contact.html">📍 Get Directions</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="copyright">&copy; 2026 Villarante's Kakanin. All rights reserved.</p>
+                <nav class="footer-nav" aria-label="Footer navigation">
+                    <a href="about.html">About</a>
+                    <a href="menu.html">Menu</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="login.html">Login</a>
+                    <a href="signup.html">Sign Up</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
