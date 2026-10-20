@@ -1,0 +1,11 @@
+.kilo/
+node_modules/
+.env
+.DS_Store
+*.log
+.firebase/
+.firebaserc
+firebase-debug.log
+*.cache
+dist/
+build/
