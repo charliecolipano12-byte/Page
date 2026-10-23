@@ -1,4 +1,4 @@
-// Villarante's Kakanin - Cart Management
+// Ate My's Kakanin - Cart Management
 class Cart {
     constructor() {
         this.key = "vk_cart";
@@ -12,6 +12,7 @@ class Cart {
             if (!Array.isArray(items)) throw new Error("Cart storage is not an array.");
             return items.filter(item =>
                 item && typeof item.id === "string" &&
+                typeof item.packageId === "string" &&
                 Number.isInteger(item.qty) && item.qty > 0
             );
         } catch (e) {
@@ -29,33 +30,34 @@ class Cart {
         this.updateBadge();
     }
 
-    add(productId, qty = 1) {
+    add(productId, packageId, qty = 1) {
         if (!(window.PRODUCTS || []).some(product => product.id === productId) ||
+            !(window.PACKAGES || []).some(item => item.id === packageId) ||
             !Number.isInteger(qty) || qty < 1) {
-            throw new Error("A valid product and positive whole-number quantity are required.");
+            throw new Error("A valid product, package, and positive whole-number quantity are required.");
         }
-        const existing = this.items.find(i => i.id === productId);
+        const existing = this.items.find(i => i.id === productId && i.packageId === packageId);
         if (existing) {
             existing.qty += qty;
         } else {
-            this.items.push({ id: productId, qty: Math.max(1, qty) });
+            this.items.push({ id: productId, packageId, qty });
         }
         this.save();
     }
 
-    update(productId, qty) {
-        const item = this.items.find(i => i.id === productId);
+    update(productId, packageId, qty) {
+        const item = this.items.find(i => i.id === productId && i.packageId === packageId);
         if (!item) return;
         if (!Number.isInteger(qty) || qty <= 0) {
-            this.remove(productId);
+            this.remove(productId, packageId);
             return;
         }
         item.qty = qty;
         this.save();
     }
 
-    remove(productId) {
-        this.items = this.items.filter(i => i.id !== productId);
+    remove(productId, packageId) {
+        this.items = this.items.filter(i => i.id !== productId || i.packageId !== packageId);
         this.save();
     }
 
@@ -71,8 +73,10 @@ class Cart {
     subtotal() {
         const products = window.PRODUCTS || [];
         return this.items.reduce((sum, i) => {
-            const p = products.find(prod => prod.id === i.id);
-            return sum + (p ? p.price * i.qty : 0);
+            const priceList = window.PACKAGES || [];
+            const p = priceList.find(item => item.id === i.packageId);
+            const price = Number(p && p.price);
+            return sum + (Number.isFinite(price) ? price * i.qty : 0);
         }, 0);
     }
 

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Owner dashboard for Ate My's Kakanin.">
+    <title>Owner Dashboard | Ate My's Kakanin</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
+    <link rel="stylesheet" href="/admin/admin.css">
+    <script src="/admin/admin.js" defer></script>
+</head>
+<body>
+    <div class="admin-shell">
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <button type="button" class="sidebar-close" data-sidebar-close aria-label="Close dashboard navigation">×</button>
+            <a class="admin-brand" href="/admin/" aria-label="Ate My's Kakanin dashboard">
+                <span aria-hidden="true">🍚</span>
+                <span>Ate My's Kakanin<small>Owner dashboard</small></span>
+            </a>
+            <nav class="admin-nav" aria-label="Dashboard sections">
+                <button type="button" class="admin-nav-link is-active" data-admin-view="overview" aria-current="page">
+                    <span aria-hidden="true">◫</span> Overview
+                </button>
+                <button type="button" class="admin-nav-link" data-admin-view="orders">
+                    <span aria-hidden="true">▤</span> Orders
+                </button>
+                <button type="button" class="admin-nav-link" data-admin-view="products">
+                    <span aria-hidden="true">◇</span> Products
+                </button>
+                <button type="button" class="admin-nav-link" data-admin-view="customers">
+                    <span aria-hidden="true">♙</span> Customers
+                </button>
+            </nav>
+            <a class="sidebar-store-link" href="/">View storefront</a>
+        </aside>
+
+        <div class="admin-main">
+            <header class="admin-topbar">
+                <button type="button" class="sidebar-toggle" data-sidebar-toggle aria-expanded="false" aria-controls="admin-sidebar" aria-label="Open dashboard navigation">☰</button>
+                <div class="topbar-spacer"></div>
+                <span class="owner-name" data-owner-name>Owner</span>
+                <button type="button" class="button button-quiet" data-admin-logout>Log out</button>
+            </header>
+
+            <main class="admin-content">
+                <p class="admin-message" data-admin-message role="status" aria-live="polite"></p>
+
+                <section class="admin-view" data-view-panel="overview" aria-labelledby="overview-title">
+                    <div class="view-heading">
+                        <div><p class="eyebrow">Your business at a glance</p><h1 id="overview-title">Overview</h1></div>
+                        <button class="button button-outline" type="button" data-refresh-orders>Refresh data</button>
+                    </div>
+                    <div class="metric-grid">
+                        <article class="metric-card metric-highlight"><span>Today's pickups</span><strong data-metric="today">—</strong></article>
+                        <article class="metric-card"><span>Pending</span><strong data-metric="pending">—</strong></article>
+                        <article class="metric-card"><span>Confirmed</span><strong data-metric="confirmed">—</strong></article>
+                        <article class="metric-card"><span>Ready for pickup</span><strong data-metric="ready">—</strong></article>
+                        <article class="metric-card"><span>Completed</span><strong data-metric="completed">—</strong></article>
+                    </div>
+                    <div class="content-card overview-note">
+                        <h2>Order coordination</h2>
+                        <p>Review each preferred pickup date and time, then confirm availability with the customer.</p>
+                        <button type="button" class="button button-primary" data-open-view="orders">View orders</button>
+                    </div>
+                </section>
+
+                <section class="admin-view" data-view-panel="orders" aria-labelledby="orders-title" hidden>
+                    <div class="view-heading">
+                        <div><p class="eyebrow">Customer pickup requests</p><h1 id="orders-title">Orders</h1></div>
+                        <button class="button button-outline" type="button" data-refresh-orders>Refresh</button>
+                    </div>
+                    <div class="content-card">
+                        <div class="filter-bar">
+                            <label class="search-field"><span>Search orders</span><input type="search" data-order-search placeholder="Order, customer, email, or item"></label>
+                            <label><span>Pickup date</span><input type="date" data-order-date></label>
+                            <label><span>Status</span>
+                                <select data-order-status-filter>
+                                    <option value="all">All statuses</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="ready">Ready for pickup</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </label>
+                        </div>
+                        <p class="result-count" data-orders-count>Loading orders…</p>
+                        <div class="table-scroll">
+                            <table>
+                                <thead><tr>
+                                    <th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Phone</th>
+                                    <th scope="col">Items / quantity</th><th scope="col">Pickup</th><th scope="col">Account email</th>
+                                    <th scope="col">Status</th><th scope="col">Actions</th>
+                                </tr></thead>
+                                <tbody data-orders-body><tr><td colspan="8">Loading…</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="admin-view" data-view-panel="products" aria-labelledby="products-title" hidden>
+                    <div class="view-heading">
+                        <div><p class="eyebrow">Customer menu and package pricing</p><h1 id="products-title">Products</h1></div>
+                        <button class="button button-outline" type="button" data-refresh-packages>Refresh</button>
+                    </div>
+                    <div class="content-card">
+                        <p class="section-intro">Manage package names, piece counts, and prices. Changes update the customer menu and the prices used when validating new orders.</p>
+                        <p class="result-count" data-packages-count>Loading packages…</p>
+                        <div class="package-list" data-packages-list></div>
+                    </div>
+                </section>
+
+                <section class="admin-view" data-view-panel="customers" aria-labelledby="customers-title" hidden>
+                    <div class="view-heading">
+                        <div><p class="eyebrow">Registered customer accounts</p><h1 id="customers-title">Customers</h1></div>
+                        <button class="button button-outline" type="button" data-refresh-customers>Refresh</button>
+                    </div>
+                    <div class="content-card">
+                        <div class="filter-bar customer-filter">
+                            <label class="search-field"><span>Search customers</span><input type="search" data-customer-search placeholder="Name or email"></label>
+                            <p class="result-count" data-customers-count>Loading customers…</p>
+                        </div>
+                        <div class="table-scroll">
+                            <table>
+                                <thead><tr>
+                                    <th scope="col">Name</th><th scope="col">Email</th><th scope="col">Date joined</th>
+                                    <th scope="col">Orders</th><th scope="col">Last order date</th>
+                                </tr></thead>
+                                <tbody data-customers-body><tr><td colspan="5">Loading…</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <dialog class="detail-dialog" data-order-dialog aria-labelledby="order-detail-title">
+        <div class="dialog-heading"><h2 id="order-detail-title">Order details</h2><button type="button" class="icon-button" data-close-order aria-label="Close order details">×</button></div>
+        <div class="detail-content" data-order-detail></div>
+    </dialog>
+</body>
+</html>

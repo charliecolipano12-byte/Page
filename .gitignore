@@ -1,4 +1,5 @@
 .kilo/
+.ate-mys-kakanin-auth/
 node_modules/
 .env
 .DS_Store

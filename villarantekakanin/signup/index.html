@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create an Ate My's Kakanin customer account.">
+    <title>Sign Up | Ate My's Kakanin</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="site-header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <a href="../index.html" class="brand" aria-label="Ate My's Kakanin Home">
+                <span class="brand-text">Ate My's Kakanin</span>
+            </a>
+            <a href="../index.html" class="nav-link">Back to Home</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="auth-header" aria-labelledby="signup-title">
+            <h1 id="signup-title">Create your account</h1>
+            <p>Sign up with Ate My's Kakanin.</p>
+        </section>
+
+        <section class="auth-form" aria-label="Sign-up form">
+            <div class="form-container">
+                <form id="signup-form" data-auth-form="signup" novalidate>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <div class="input-wrapper">
+                            <input id="name" name="name" type="text" autocomplete="name" maxlength="100" required placeholder="Your name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <div class="input-wrapper">
+                            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <input id="password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required aria-describedby="password-hint" placeholder="At least 12 characters">
+                        </div>
+                        <small id="password-hint" class="form-hint">Use at least 12 characters.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm password</label>
+                        <div class="input-wrapper">
+                            <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required placeholder="Enter your password again">
+                        </div>
+                    </div>
+
+                    <div class="form-group privacy-box">
+                        <label for="accountPrivacy" class="checkbox-label">
+                            <input id="accountPrivacy" name="accountPrivacy" type="checkbox" required>
+                            I understand my name and email are stored to sign in to this account. My password is stored as a one-way hash, not in readable form. My account remains until I delete it; deleting it does not delete separate order records.
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary btn-full" type="submit">Create account</button>
+                    <p class="form-links" id="auth-message" role="status" aria-live="polite"></p>
+                </form>
+                <p class="form-links">Already have an account? <a href="../login/">Login</a></p>
+                <p class="form-links"><a href="../index.html">Return to the home page</a></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span data-current-year>2026</span> Ate My's Kakanin. All rights reserved.</p>
+    </footer>
+
+    <script src="../script.js"></script>
+    <script src="../auth.js"></script>
+</body>
+</html>

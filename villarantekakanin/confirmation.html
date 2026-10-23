@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmed - Villarante's Kakanin</title>
-    <meta name="description" content="Order confirmation">
-    <meta property="og:title" content="Order Confirmation - Villarante's Kakanin">
-    <meta property="og:description" content="Review your Villarante's Kakanin pre-order summary and payment instructions.">
+    <title>Order Request Received - Ate My's Kakanin</title>
+    <meta name="description" content="Your Ate My's Kakanin order request has been received.">
+    <meta property="og:title" content="Order Request Received - Ate My's Kakanin">
+    <meta property="og:description" content="Review your kakanin order request and pickup details.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bibingka.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,33 +15,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="site-header" role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <a href="index.html" class="brand" aria-label="Villarante's Kakanin Home">
-                <span class="brand-icon" aria-hidden="true">🍚</span>
-                <span class="brand-text">Villarante's Kakanin</span>
-            </a>
-            <button class="hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-            </button>
-            <ul id="nav-menu" class="nav-menu" role="menubar">
-                <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
-                <li role="none"><a href="menu.html" class="nav-link" role="menuitem">Menu</a></li>
-                <li role="none"><a href="about.html" class="nav-link" role="menuitem">About</a></li>
-                <li role="none"><a href="checkout.html" class="nav-link nav-cart" role="menuitem" aria-label="Shopping cart">Cart <span class="cart-badge" id="cart-count" style="display:none;">0</span></a></li>
-            </ul>
-        </nav>
-    </header>
+    <div data-site-header></div>
 
     <main>
         <section class="confirmation-section">
             <div class="container">
                 <div class="confirmation-card">
                     <div class="confirmation-icon">✅</div>
-                    <h1 class="confirmation-title">Order Confirmed!</h1>
-                    <p class="confirmation-message">Thank you for your pre-order. We've received your order.</p>
+                    <h1 class="confirmation-title">Order Request Received</h1>
+                    <p class="confirmation-message">Thank you. We have received your order request and will contact you to confirm availability and your preferred pickup time.</p>
                     <div class="order-number">
                         <span class="order-label">Order Number</span>
                         <span class="order-value" id="orderNumber">-</span>
@@ -49,7 +31,7 @@
                     <div id="confirmationSummary" class="confirmation-summary" aria-live="polite">
                         <p>Loading order details…</p>
                     </div>
-                    <p class="confirmation-note">Please keep this order number for your reference. We'll contact you to confirm pickup/delivery details.</p>
+                    <p class="confirmation-note">Payment is made on pickup. For GCash or Maribank, we check the account; you may send proof of payment, and we confirm via Facebook Messenger. Contact details are available in the footer.</p>
                     <div class="confirmation-actions">
                         <a href="menu.html" class="btn btn-primary">Order More</a>
                         <a href="index.html" class="btn btn-outline">Back to Home</a>
@@ -59,24 +41,15 @@
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p class="footer-business-info" data-business-summary></p>
-            <div class="footer-bottom">
-                <p class="copyright">&copy; <span data-current-year></span> <span data-business-name></span>. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div data-site-footer></div>
 
     <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <script src="js/orderService.js"></script>
     <script src="script.js"></script>
     <script src="confirmation.js"></script>
+    <script src="auth.js"></script>
+    <script src="site-shell.js"></script>
 </body>
 </html>

@@ -1,0 +1,21 @@
+{
+  "name": "ate-mys-kakanin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ate My's Kakanin storefront and customer authentication server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "admin:provision": "node server.js --provision-admin",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "express-session": "^1.18.2"
+  }
+}

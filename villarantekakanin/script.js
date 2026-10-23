@@ -60,33 +60,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    function showCartNotification(message) {
-        let notification = document.querySelector(".cart-notification");
-        if (!notification) {
-            notification = document.createElement("div");
-            notification.className = "cart-notification";
-            notification.setAttribute("role", "status");
-            document.body.appendChild(notification);
-        }
-        notification.textContent = message;
-        notification.classList.add("show");
-        window.setTimeout(() => notification.classList.remove("show"), 3000);
-    }
-
-    document.querySelectorAll(".featured-section .add-to-cart").forEach(button => {
-        button.addEventListener("click", function() {
-            const productId = button.dataset.id;
-            if (!window.cart || !productId) return;
-            window.cart.add(productId, 1);
-            const originalText = button.textContent;
-            button.textContent = "Added!";
-            showCartNotification("Added to cart");
-            window.setTimeout(() => {
-                button.textContent = originalText;
-            }, 1500);
-        });
-    });
-
     function formatAddress(address) {
         return [address.street, address.city, address.province, address.postalCode, address.country]
             .filter(Boolean)
@@ -146,14 +119,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
     document.querySelectorAll("[data-business-hours]").forEach(element => {
-        element.textContent = formatHours(business.hours || {});
+        element.textContent = typeof business.hours === "string" ? business.hours : formatHours(business.hours || {});
     });
     document.querySelectorAll("[data-business-summary]").forEach(element => {
         const summary = [
             `Address: ${address}`,
             `Phone: ${business.phone || "[Phone number not provided]"}`,
             `Email: ${business.email || "[Email address not provided]"}`,
-            `Hours: ${formatHours(business.hours || {})}`
+            `Pickup: ${typeof business.hours === "string" ? business.hours : formatHours(business.hours || {})}`,
+            `Facebook / Messenger: ${business.facebookName || ""}`
         ];
         element.textContent = summary.join(" | ");
     });

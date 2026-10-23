@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Villarante's Kakanin</title>
-    <meta name="description" content="Complete your kakanin pre-order checkout">
-    <meta property="og:title" content="Pre-order Checkout - Villarante's Kakanin">
-    <meta property="og:description" content="Review your kakanin order and schedule pickup or delivery.">
+    <title>Place an Order - Ate My's Kakanin</title>
+    <meta name="description" content="Choose a preferred pickup date and time for your Ate My's Kakanin order.">
+    <meta property="og:title" content="Place an Order - Ate My's Kakanin">
+    <meta property="og:description" content="Order homemade kakanin packages for pickup in Calinan, Davao City.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bibingka.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,169 +15,74 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="site-header" role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <a href="index.html" class="brand" aria-label="Villarante's Kakanin Home">
-                <span class="brand-icon" aria-hidden="true">🍚</span>
-                <span class="brand-text">Villarante's Kakanin</span>
-            </a>
-            <button class="hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-            </button>
-            <ul id="nav-menu" class="nav-menu" role="menubar">
-                <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
-                <li role="none"><a href="menu.html" class="nav-link" role="menuitem">Menu</a></li>
-                <li role="none"><a href="about.html" class="nav-link" role="menuitem">About</a></li>
-                <li role="none">
-                    <a href="checkout.html" class="nav-link nav-cart" role="menuitem" aria-label="Shopping cart">
-                        🛒 Cart <span class="cart-badge" id="cart-count" style="display:none;">0</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <div data-site-header></div>
 
     <main>
-        <section class="page-header">
-            <div class="container">
-                <h1 class="page-title">Checkout</h1>
-                <p class="page-subtitle">Complete your pre-order</p>
-            </div>
-        </section>
-
+        <section class="page-header"><div class="container"><h1 class="page-title">Your Order</h1><p class="page-subtitle">Choose your preferred pickup date and time. We will confirm availability with you.</p></div></section>
         <section class="checkout-section">
             <div class="container">
-                <p id="demoWarning" class="warning-banner" role="status" hidden>Demo mode: orders are not being sent.</p>
+                <p id="demoWarning" class="warning-banner" role="status" hidden></p>
                 <div class="checkout-grid">
                     <div class="checkout-form">
-                        <p id="emptyCartState" class="empty-cart-state" hidden>
-                            Your cart is empty. <a href="menu.html">Browse the menu</a> to add kakanin.
-                        </p>
-                        <form id="checkoutForm" novalidate>
-                            <h2>Customer Information</h2>
+                        <p id="emptyCartState" class="empty-cart-state" hidden>Your cart is empty. <a href="menu.html">Browse the menu</a> to add kakanin.</p>
+                        <form id="checkoutForm" novalidate hidden>
+                            <h2>Contact Information</h2>
+                            <div class="form-group"><label for="fullName">Name *</label><input type="text" id="fullName" name="fullName" autocomplete="name" maxlength="80" required><div class="error-text" id="error-fullName"></div></div>
+                            <div class="form-group"><label for="phone">Phone number *</label><input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="24" placeholder="09XXXXXXXXX" required><div class="error-text" id="error-phone"></div></div>
+                            <div class="form-group"><label for="email">Email (optional)</label><input type="email" id="email" name="email" autocomplete="email" maxlength="254"><div class="error-text" id="error-email"></div></div>
+                            <h2>Pickup Schedule</h2>
+                            <p>Pickup only at P-2 Cawayan, Calinan, Davao City (around the Calinan district). Pickup is open daily; hours are arranged with you.</p>
+                            <div class="form-group"><label for="pickupDate">Preferred pickup date *</label><input type="date" id="pickupDate" name="pickupDate" required><div class="error-text" id="error-pickupDate"></div></div>
+                            <div class="form-group"><label for="timeSlot">Preferred pickup time *</label><input type="text" id="timeSlot" name="timeSlot" maxlength="80" placeholder="Your preferred time" required><div class="error-text" id="error-timeSlot"></div></div>
+                            <p class="small-text">Orders depend on the owner's and ingredients' availability. Same-day orders may be possible in special cases. For large orders, please ask a few days ahead.</p>
+                            <h2>Payment on Pickup</h2>
                             <div class="form-group">
-                                <label for="fullName">Full Name *</label>
-                                <input type="text" id="fullName" name="fullName" required>
-                                <div class="error-text" id="error-fullName"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Mobile Number (PH) *</label>
-                                <input type="tel" id="phone" name="phone" placeholder="09XXXXXXXXX or +639XXXXXXXXX" required>
-                                <div class="error-text" id="error-phone"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email (optional)</label>
-                                <input type="email" id="email" name="email" placeholder="you@example.com">
-                                <div class="error-text" id="error-email"></div>
-                            </div>
-
-                            <h2>Order Details</h2>
-                            <div class="form-group">
-                                <label for="orderType">Order Type *</label>
-                                <select id="orderType" name="orderType" required>
-                                    <option value="pickup">Pickup</option>
-                                    <option value="delivery" id="deliveryOption">Delivery</option>
-                                </select>
-                            </div>
-
-                            <div id="deliveryFields" hidden>
-                                <div class="form-group">
-                                    <label for="address">Delivery Address *</label>
-                                    <textarea id="address" name="address" rows="3"></textarea>
-                                    <div class="error-text" id="error-address"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="pickupDate">Pickup/Delivery Date *</label>
-                                <select id="pickupDate" name="pickupDate" required>
-                                    <option value="">-- Select a date --</option>
-                                </select>
-                                <div class="error-text" id="error-pickupDate"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="timeSlot">Time Slot *</label>
-                                <select id="timeSlot" name="timeSlot" required>
-                                    <option value="">-- Select time slot --</option>
-                                </select>
-                                <div class="error-text" id="error-timeSlot"></div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="payment">Payment Method *</label>
+                                <label for="payment">Payment method *</label>
                                 <select id="payment" name="payment" required>
                                     <option value="gcash">GCash</option>
-                                    <option value="cash">Cash</option>
+                                    <option value="cash-on-pickup">Cash on pickup</option>
+                                    <option value="maribank">Maribank</option>
                                 </select>
                             </div>
-
-                            <div id="gcashPaymentInfo" class="payment-info" hidden>
-                                <h3>Pay with GCash</h3>
-                                <p><strong>Account name:</strong> <span id="gcashName"></span></p>
-                                <p><strong>GCash number:</strong> <span id="gcashNumber"></span></p>
-                                <img id="gcashQrImage" alt="GCash payment QR code" hidden>
-                                <p id="gcashPlaceholder" class="small-text" hidden>Add your GCash account name, number, and QR image in config.js.</p>
-                                <div class="form-group">
-                                    <label for="referenceNumber">GCash reference number *</label>
-                                    <input type="text" id="referenceNumber" name="referenceNumber" inputmode="numeric" pattern="[0-9]{10,13}" maxlength="13">
-                                    <div class="error-text" id="error-referenceNumber"></div>
-                                </div>
+                            <div class="payment-info">
+                                <p><strong>GCash:</strong> Mylen Villarante, 0946 435 1750</p>
+                                <p class="small-text">Payment is made on pickup. We check our GCash or bank account. You may send a screenshot or proof of payment, and we confirm via Facebook Messenger.</p>
+                                <p class="small-text">GCash QR code: TODO — no QR code was provided.</p>
                             </div>
-
-                            <div class="form-group">
-                                <label for="notes">Special Instructions (optional)</label>
-                                <textarea id="notes" name="notes" rows="3" placeholder="e.g., 'no onions', 'separate packaging'"></textarea>
+                            <div class="form-group"><label for="notes">Allergies or special requests (optional)</label><textarea id="notes" name="notes" rows="3" maxlength="5000" placeholder="Please tell us about any food allergies."></textarea></div>
+                            <div class="form-group privacy-box">
+                                <label for="privacyConsent" class="checkbox-label"><input type="checkbox" id="privacyConsent" name="privacyConsent" required>
+                                    I agree that my name and phone number may be used only to process my order and coordinate pickup. This information is kept securely for up to one year after my last transaction.
+                                </label>
+                                <p class="small-text">Optional accounts use your name and email for sign-in and store your password as a one-way hash. Account data remains until you delete the account from the home page. Deleting an account does not delete separate order records.</p>
                             </div>
-
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;" aria-hidden="true">
                             <p id="checkoutError" class="error-text" role="alert"></p>
-                            <button type="submit" class="btn btn-primary btn-full">Place Order</button>
+                            <button type="submit" class="btn btn-primary btn-full">Send Order Request</button>
                         </form>
                     </div>
-
                     <div class="checkout-summary">
                         <h2>Order Summary</h2>
                         <div id="summaryItems"></div>
-                        <div id="availabilityMessages" aria-live="polite"></div>
                         <div class="summary-totals">
-                            <div class="summary-row">
-                                <span>Subtotal</span>
-                                <span id="subtotal">₱0.00</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Delivery Fee</span>
-                                <span id="deliveryFee">₱0.00</span>
-                            </div>
-                            <div class="summary-row total">
-                                <span>Total</span>
-                                <span id="total">₱0.00</span>
-                            </div>
+                            <div class="summary-row"><span>Total</span><span id="total">₱0.00</span></div>
                         </div>
+                        <p class="small-text">Your preferred date and time are requests; we will contact you to confirm availability. Payment is made on pickup.</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p class="footer-business-info" data-business-summary></p>
-            <div class="footer-bottom">
-                <p class="copyright">&copy; <span data-current-year></span> <span data-business-name></span>. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div data-site-footer></div>
 
     <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <script src="js/orderService.js"></script>
     <script src="script.js"></script>
     <script src="checkout.js"></script>
+    <script src="auth.js"></script>
+    <script src="site-shell.js"></script>
 </body>
 </html>

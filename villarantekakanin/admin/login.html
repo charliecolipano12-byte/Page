@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Owner sign in for Ate My's Kakanin.">
+    <title>Owner Login | Ate My's Kakanin</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
+    <link rel="stylesheet" href="/admin/login.css">
+    <script src="/auth.js" defer></script>
+</head>
+<body class="admin-login-page">
+    <main class="login-card">
+        <a class="login-brand" href="/" aria-label="Ate My's Kakanin home">🍚 <span>Ate My's Kakanin</span></a>
+        <p class="eyebrow">Owner access</p>
+        <h1>Sign in to your dashboard</h1>
+        <p class="login-copy">Use the provisioned owner account to manage orders and customer information.</p>
+        <form data-auth-form="login" novalidate>
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="username" maxlength="254" required>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+            <button class="button button-primary login-submit" type="submit">Sign in</button>
+            <p id="auth-message" class="login-message" role="status" aria-live="polite"></p>
+        </form>
+        <a class="store-link" href="/">Return to storefront</a>
+    </main>
+</body>
+</html>

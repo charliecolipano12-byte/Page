@@ -1,67 +1,33 @@
-// Villarante's Kakanin - Configuration
-// Centralized business info, site settings, and placeholder configs
-
+// Ate My's Kakanin - business and ordering configuration.
 const CONFIG = {
     business: {
-        name: "Villarante's Kakanin",
-        tagline: "Authentic Filipino rice delicacies made with generations-old recipes and the finest local ingredients.",
+        name: "Ate My's Kakanin",
+        tagline: "Homemade kakanin grown with the trust and support of our suki.",
         address: {
-            street: "[Street address not provided]",
-            city: "[City not provided]",
-            province: "[Province not provided]",
-            postalCode: "[Postal code not provided]",
-            country: "Philippines"
+            street: "P-2 Cawayan",
+            city: "Calinan, Davao City",
+            province: "",
+            postalCode: "",
+            country: ""
         },
-        phone: "[Phone number not provided]",
-        email: "[Email address not provided]",
-        hours: {
-            monday: { open: "06:00", close: "19:00", placeholder: true },
-            tuesday: { open: "06:00", close: "19:00", placeholder: true },
-            wednesday: { open: "06:00", close: "19:00", placeholder: true },
-            thursday: { open: "06:00", close: "19:00", placeholder: true },
-            friday: { open: "06:00", close: "19:00", placeholder: true },
-            saturday: { open: "06:00", close: "17:00", placeholder: true },
-            sunday: { open: "07:00", close: "15:00", placeholder: false }
-        },
-        social: {
-            facebook: "[Facebook URL not provided]",
-            instagram: "[Instagram URL not provided]",
-            twitter: "[Twitter URL not provided]"
-        },
+        phone: "0951 886 4526",
+        email: "rayvillarante119@gmail.com",
+        facebookName: "Mylen Villarante",
+        hours: "Open daily, Monday to Sunday. Pickup hours are arranged with the customer.",
+        social: {},
         gcash: {
-            name: "[GCash account name - not provided]",
-            number: "[GCash mobile number - not provided]",
+            name: "Mylen Villarante",
+            number: "0946 435 1750",
             qrImage: ""
         }
     },
     order: {
-        leadTimeDays: 1,
+        // TODO: Confirm whether delivery is offered around Calinan; currently display pickup only.
         pickupOnly: true,
-        deliveryFee: 50,
-        slotDurationMinutes: 60,
-        closedDays: [],
-        openingHours: {
-            monday: { open: "06:00", close: "19:00", placeholder: true },
-            tuesday: { open: "06:00", close: "19:00", placeholder: true },
-            wednesday: { open: "06:00", close: "19:00", placeholder: true },
-            thursday: { open: "06:00", close: "19:00", placeholder: true },
-            friday: { open: "06:00", close: "19:00", placeholder: true },
-            saturday: { open: "06:00", close: "17:00", placeholder: true },
-            sunday: { open: "07:00", close: "15:00", placeholder: false }
-        }
+        pickupAddress: "P-2 Cawayan, Calinan, Davao City (around the Calinan district)"
     },
-    // Firebase config - PLACEHOLDER VALUES. Replace with your actual Firebase project config.
-    firebase: {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID",
-        measurementId: "YOUR_MEASUREMENT_ID"
-    },
-    admin: {
-        uid: "SET_ADMIN_UID_AFTER_CREATING_FIREBASE_USER"
+    backend: {
+        appsScriptUrl: "https://script.google.com/macros/s/AKfycbxwTrumGi_u16O4HAPiEyVdGbrkc73QtHlclOwlf3zqm-pdH9eOIkEc_Z19eWoQzboZ7g/exec"
     }
 };
 

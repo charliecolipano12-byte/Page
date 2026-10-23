@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Villarante's Kakanin - About</title>
-    <meta name="description" content="Our story - generations-old kakanin recipes">
-    <meta property="og:title" content="About Villarante's Kakanin">
-    <meta property="og:description" content="Learn about Villarante's Kakanin and its Filipino kakanin menu.">
+    <title>Ate My's Kakanin - About</title>
+    <meta name="description" content="The story of Ate My's Kakanin, a homemade kakanin business that grew with support from loyal customers.">
+    <meta property="og:title" content="About Ate My's Kakanin">
+    <meta property="og:description" content="Learn how Ate My's Kakanin grew from homemade snacks into a small business.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bibingka.jpg">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
@@ -16,35 +16,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="site-header" role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <a href="index.html" class="brand" aria-label="Villarante's Kakanin Home">
-                <span class="brand-icon" aria-hidden="true">🍚</span>
-                <span class="brand-text">Villarante's Kakanin</span>
-            </a>
-            <button class="hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-            </button>
-            <ul id="nav-menu" class="nav-menu" role="menubar">
-                <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
-                <li role="none"><a href="menu.html" class="nav-link" role="menuitem">Menu</a></li>
-                <li role="none"><a href="about.html" class="nav-link active" role="menuitem">About</a></li>
-                <li role="none">
-                    <a href="checkout.html" class="nav-link nav-cart" role="menuitem" aria-label="Shopping cart">
-                        🛒 Cart <span class="cart-badge" id="cart-count" style="display:none;">0</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <div data-site-header></div>
 
     <main>
         <section class="page-header">
             <div class="container">
                 <h1 class="page-title">Our Story</h1>
-                <p class="page-subtitle">How Villarante's Kakanin came to be</p>
+                <p class="page-subtitle">How Ate My's Kakanin came to be</p>
             </div>
         </section>
 
@@ -52,50 +30,26 @@
             <div class="container">
                 <div class="about-content">
                     <div class="about-text">
-                        <h2>Our Heritage</h2>
-                        <p>Villarante's Kakanin started as a small family business rooted in the rich culinary traditions of the Philippines. Our lola Villarante began making kakanin for family gatherings, and her delicious creations quickly became the talk of the neighborhood.</p>
-                        <p>Today, we continue her legacy by preparing each item with the same love and attention to detail, using traditional methods passed down through generations.</p>
+                        <h2>Our Story</h2>
+                        <p>During the pandemic, we started making kakanin for our own snacks and sharing photos on Facebook. People became interested and wanted to try it, so we turned it into a small business.</p>
+                        <p>Over time, we gained many loyal customers (suki). Their trust and support helped grow our simple homemade snacks into the small business we have today.</p>
                     </div>
                     <div class="about-image">
-                        <picture><source srcset="images/bibingka.webp" type="image/webp"><img src="images/bibingka.jpg" alt="Villarante's Kakanin kakanin products"></picture>
+                        <picture><source srcset="images/bibingka.webp" type="image/webp"><img src="images/bibingka.jpg" alt="Bibingka"></picture>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="values-section">
-            <div class="container">
-                <h2 class="section-title">Our Values</h2>
-                <div class="values-grid">
-                    <div class="value-item">
-                        <h3>Quality</h3>
-                        <p>We never compromise on the quality of our ingredients.</p>
-                    </div>
-                    <div class="value-item">
-                        <h3>Tradition</h3>
-                        <p>Our recipes are authentic and time-tested.</p>
-                    </div>
-                    <div class="value-item">
-                        <h3>Community</h3>
-                        <p>We're proud to serve our local community.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p class="footer-business-info" data-business-summary></p>
-            <div class="footer-bottom">
-                <p class="copyright">&copy; <span data-current-year></span> <span data-business-name></span>. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div data-site-footer></div>
 
     <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
     <script src="script.js"></script>
-    </body>
+    <script src="auth.js"></script>
+    <script src="site-shell.js"></script>
+</body>
 </html>

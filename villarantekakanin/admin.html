@@ -3,34 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Villarante's Kakanin</title>
-    <meta name="description" content="Admin panel for managing orders">
-    <meta property="og:title" content="Order Management - Villarante's Kakanin">
-    <meta property="og:description" content="Manage orders and product availability for Villarante's Kakanin.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="images/bibingka.jpg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Manage Ate My's Kakanin pre-orders.">
+    <title>Order Admin | Ate My's Kakanin</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header" role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <a href="index.html" class="brand" aria-label="Villarante's Kakanin Home">
-                <span class="brand-icon" aria-hidden="true">🍚</span>
-                <span class="brand-text">Villarante's Kakanin</span>
+        <nav class="navbar" role="navigation" aria-label="Admin navigation">
+            <a href="index.html" class="brand" aria-label="Ate My's Kakanin Home">
+                <span class="brand-text">Ate My's Kakanin</span>
             </a>
-            <button class="hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-            </button>
-            <ul id="nav-menu" class="nav-menu" role="menubar">
-                <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
-                <li role="none"><a href="menu.html" class="nav-link" role="menuitem">Menu</a></li>
-                <li role="none"><a href="about.html" class="nav-link" role="menuitem">About</a></li>
-                <li role="none"><a href="checkout.html" class="nav-link nav-cart" role="menuitem" aria-label="Shopping cart">Cart <span class="cart-badge" id="cart-count" style="display:none;">0</span></a></li>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="menu.html" class="nav-link">Menu</a></li>
+                <li><button class="nav-link nav-login" type="button" data-admin-logout>Log out</button></li>
             </ul>
         </nav>
     </header>
@@ -38,83 +26,47 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1 class="page-title">Admin Panel</h1>
-                <p class="page-subtitle">Manage orders and settings</p>
+                <h1 class="page-title">Pre-order Admin</h1>
+                <p class="page-subtitle">Review customer pickup requests and update their status.</p>
             </div>
         </section>
 
         <section class="admin-section">
             <div class="container">
-                <div id="adminLogin">
-                    <div class="admin-card">
-                        <h2>Admin Login</h2>
-                        <p class="small-text">Sign in with the owner's Firebase Authentication account.</p>
-                        <div class="form-group">
-                            <label for="adminEmail">Email</label>
-                            <input type="email" id="adminEmail" autocomplete="username" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="adminPassword">Password</label>
-                            <input type="password" id="adminPassword" autocomplete="current-password" required>
-                        </div>
-                        <button class="btn btn-primary" id="adminLoginBtn">Login</button>
-                        <div id="adminLoginMsg" class="error-text"></div>
+                <div class="admin-header">
+                    <h2>Incoming Orders</h2>
+                    <div class="admin-filters">
+                        <label for="status-filter">Filter by status</label>
+                        <select id="status-filter">
+                            <option value="all">All statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="ready">Ready for pickup</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <button class="btn btn-primary" type="button" data-refresh-orders>Refresh</button>
                     </div>
                 </div>
-
-                <div id="adminPanel" hidden>
-                    <div class="admin-header">
-                        <h2>Orders</h2>
-                        <div class="admin-filters">
-                            <label for="dateFilter">Pickup date</label>
-                            <input type="date" id="dateFilter">
-                            <select id="statusFilter">
-                                <option value="all">All Status</option>
-                                <option value="pending">Pending</option>
-                                <option value="confirmed">Confirmed</option>
-                                <option value="ready">Ready</option>
-                                <option value="completed">Completed</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                            <button class="btn btn-sm" id="refreshOrders">Refresh</button>
-                            <button class="btn btn-sm btn-outline" id="signOutBtn" type="button">Sign out</button>
-                        </div>
-                    </div>
-                    <p id="ordersMessage" class="small-text" role="status"></p>
-                    <div class="table-wrapper">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Order #</th>
-                                    <th>Date</th>
-                                    <th>Customer</th>
-                                    <th>Items</th>
-                                    <th>Total</th>
-                                    <th>Type</th>
-                                    <th>Payment</th>
-                                    <th>Order details</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTableBody">
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <section class="admin-settings production-summary" aria-labelledby="productionHeading">
-                        <h2 id="productionHeading">Production summary</h2>
-                        <label for="productionDate">Pickup date</label>
-                        <input type="date" id="productionDate">
-                        <div id="productionSummary" aria-live="polite"></div>
-                    </section>
-
-                    <div class="admin-settings">
-                        <h2>Product Settings</h2>
-                        <p class="small-text">Daily capacity and sold-out settings are saved in Firestore.</p>
-                        <p id="settingsMessage" class="small-text" role="status"></p>
-                        <div id="productSettings"></div>
-                    </div>
+                <p id="admin-message" role="status" aria-live="polite"></p>
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order</th>
+                                <th scope="col">Customer</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Items and quantities</th>
+                                <th scope="col">Pickup date</th>
+                                <th scope="col">Pickup time</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <tr><td colspan="8">Loading orders…</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -122,20 +74,12 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p class="footer-business-info" data-business-summary></p>
             <div class="footer-bottom">
-                <p class="copyright">&copy; <span data-current-year></span> <span data-business-name></span>. All rights reserved.</p>
+                <p class="copyright">&copy; <span data-current-year>2026</span> Ate My's Kakanin.</p>
             </div>
         </div>
     </footer>
 
-    <script src="config.js"></script>
-    <script src="products.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
-    <script src="js/orderService.js"></script>
     <script src="script.js"></script>
     <script src="admin.js"></script>
 </body>

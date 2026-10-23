@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Villarante's Kakanin - Menu</title>
-    <meta name="description" content="Browse our full menu of kakanin - Bibingka, Puto, Suman, Kutsinta, Palitaw, Biko">
-    <meta property="og:title" content="Kakanin Menu - Villarante's Kakanin">
-    <meta property="og:description" content="Browse Bibingka, Puto, Suman, Kutsinta, Palitaw, and Biko.">
+    <title>Ate My's Kakanin - Menu</title>
+    <meta name="description" content="Browse Ate My's Kakanin menu and select aluminum tray or bilao packages for pickup.">
+    <meta property="og:title" content="Kakanin Menu - Ate My's Kakanin">
+    <meta property="og:description" content="Choose from homemade Filipino kakanin and package sizes.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bibingka.jpg">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
@@ -16,75 +16,34 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="site-header" role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <a href="index.html" class="brand" aria-label="Villarante's Kakanin Home">
-                <span class="brand-icon" aria-hidden="true">🍚</span>
-                <span class="brand-text">Villarante's Kakanin</span>
-            </a>
-            <button class="hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-                <span class="hamburger-line" aria-hidden="true"></span>
-            </button>
-            <ul id="nav-menu" class="nav-menu" role="menubar">
-                <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
-                <li role="none"><a href="menu.html" class="nav-link active" role="menuitem">Menu</a></li>
-                <li role="none"><a href="about.html" class="nav-link" role="menuitem">About</a></li>
-                <li role="none">
-                    <a href="checkout.html" class="nav-link nav-cart" role="menuitem" aria-label="Shopping cart">
-                        🛒 Cart <span class="cart-badge" id="cart-count" style="display:none;">0</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <div data-site-header></div>
 
     <main>
         <section class="page-header">
             <div class="container">
                 <h1 class="page-title">Our Menu</h1>
-                <p class="page-subtitle">Explore our variety of traditional kakanin</p>
-            </div>
-        </section>
-
-        <section class="menu-filters-section">
-            <div class="container">
-                <div class="menu-filters">
-                    <button class="filter-btn active" data-category="all">All</button>
-                    <button class="filter-btn" data-category="baked">Baked</button>
-                    <button class="filter-btn" data-category="steamed">Steamed</button>
-                    <button class="filter-btn" data-category="boiled">Boiled</button>
-                    <button class="filter-btn" data-category="sticky">Sticky</button>
-                </div>
+                <p class="page-subtitle">No minimum order. Orders are prepared based on availability.</p>
             </div>
         </section>
 
         <section class="menu-section">
             <div class="container">
+                <div data-package-prices></div>
                 <div class="product-grid" id="menu-grid"></div>
+                <p class="allergy-note">General ingredients include rice flour, glutinous rice, cassava, coconut milk, sugar, grated coconut, and other ingredients depending on the product. Customers with food allergies should tell us before ordering; cross-contact with other allergens may occur.</p>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p class="footer-business-info" data-business-summary></p>
-            <div class="footer-bottom">
-                <p class="copyright">&copy; <span data-current-year></span> <span data-business-name></span>. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div data-site-footer></div>
 
     <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
     <script src="script.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <script src="js/orderService.js"></script>
     <script src="menu-page.js"></script>
+    <script src="auth.js"></script>
+    <script src="site-shell.js"></script>
 </body>
 </html>

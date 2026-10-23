@@ -1,28 +1,120 @@
-// Villarante's Kakanin - Order Service (Firebase adapter)
+// Ate My's Kakanin - Order Service adapter for Google Apps Script
 const OrderService = {
     isDemoMode() {
-        return Boolean(window.CONFIG &&
-            window.CONFIG.firebase &&
-            window.CONFIG.firebase.apiKey === "YOUR_API_KEY");
+        const url = window.CONFIG && window.CONFIG.backend && window.CONFIG.backend.appsScriptUrl;
+        return !url || url === "YOUR_APPS_SCRIPT_WEB_APP_URL";
     },
 
-    initializeFirebase() {
-        if (this.isDemoMode()) return null;
-        if (!window.firebase || !window.firebase.firestore || !window.firebase.functions || !window.firebase.auth) {
-            throw new Error("Firebase SDKs did not load. Check your network and Firebase script tags.");
+    getBackendUrl(action, params = {}) {
+        const base = (window.CONFIG && window.CONFIG.backend && window.CONFIG.backend.appsScriptUrl) || "";
+        if (!base || base === "YOUR_APPS_SCRIPT_WEB_APP_URL") {
+            return "";
         }
-        if (!window.CONFIG || !window.CONFIG.firebase || !window.CONFIG.firebase.projectId) {
-            throw new Error("Firebase is not configured. Add your Firebase web config in config.js.");
+        const url = new URL(base);
+        url.searchParams.set("action", action);
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== "") {
+                url.searchParams.set(key, String(value));
+            }
+        });
+        return url.toString();
+    },
+
+    mergePublicConfig(serverConfig) {
+        const baseProducts = Array.isArray(window.PRODUCTS) ? window.PRODUCTS.slice() : [];
+        const basePackages = Array.isArray(window.PACKAGES) ? window.PACKAGES.slice() : [];
+        const map = {};
+        (serverConfig.products || []).forEach(product => {
+            map[product.id] = product;
+        });
+
+        const merged = baseProducts.map(product => ({
+            ...product,
+            ...(map[product.id] || {})
+        }));
+        const packageMap = {};
+        (serverConfig.packages || []).forEach(packageInfo => {
+            packageMap[packageInfo.id] = packageInfo;
+        });
+        const mergedPackages = basePackages.map(packageInfo => ({
+            ...packageInfo,
+            ...(packageMap[packageInfo.id] || {})
+        }));
+
+        if (typeof window !== "undefined") {
+            window.PRODUCTS = merged;
+            window.PACKAGES = mergedPackages;
         }
-        const app = window.firebase.apps.length
-            ? window.firebase.app()
-            : window.firebase.initializeApp(window.CONFIG.firebase);
-        return {
-            app,
-            db: app.firestore(),
-            functions: app.functions(),
-            auth: app.auth()
-        };
+
+        if (serverConfig.order) {
+            window.CONFIG = Object.assign({}, window.CONFIG || {}, {
+                order: Object.assign({}, window.CONFIG && window.CONFIG.order, serverConfig.order),
+                business: Object.assign({}, window.CONFIG && window.CONFIG.business, serverConfig.business || {})
+            });
+        }
+
+        return merged;
+    },
+
+    async fetchJson(url, options = {}) {
+        const controller = new AbortController();
+        const timeoutMs = Number(options.timeoutMs || 20000);
+        const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            const contentType = response.headers.get("content-type") || "";
+            let payload = null;
+            if (contentType.includes("application/json")) {
+                payload = await response.json();
+            } else {
+                payload = await response.text();
+                try {
+                    payload = JSON.parse(payload);
+                } catch (error) {
+                    payload = { success: false, message: String(payload || "Request failed.") };
+                }
+            }
+
+            if (!response.ok || payload && payload.success === false) {
+                throw new Error((payload && payload.message) || "The request could not be completed.");
+            }
+            return payload;
+        } catch (error) {
+            if (error.name === "AbortError") {
+                throw new Error("The request timed out. Please try again.");
+            }
+            throw new Error(error.message || "The request could not be completed.");
+        } finally {
+            window.clearTimeout(timer);
+        }
+    },
+
+    async getPublicConfig() {
+        if (this.isDemoMode()) {
+            const merged = Array.isArray(window.PRODUCTS) ? window.PRODUCTS.slice() : [];
+            const fallback = {
+                products: merged,
+                packages: Array.isArray(window.PACKAGES) ? window.PACKAGES.slice() : [],
+                order: window.CONFIG && window.CONFIG.order ? window.CONFIG.order : {},
+                business: window.CONFIG && window.CONFIG.business ? window.CONFIG.business : {}
+            };
+            sessionStorage.setItem("vk_public_config", JSON.stringify(fallback));
+            return fallback;
+        }
+
+        const url = this.getBackendUrl("config");
+        const payload = await this.fetchJson(url, { method: "GET", timeoutMs: 20000 });
+        const merged = this.mergePublicConfig(payload || {});
+        sessionStorage.setItem("vk_public_config", JSON.stringify({
+            products: merged,
+            packages: window.PACKAGES || [],
+            order: window.CONFIG && window.CONFIG.order ? window.CONFIG.order : {},
+            business: window.CONFIG && window.CONFIG.business ? window.CONFIG.business : {}
+        }));
+        return { ...payload, products: merged, packages: window.PACKAGES || [] };
     },
 
     async submitOrder(order) {
@@ -39,118 +131,28 @@ const OrderService = {
             localStorage.setItem("vk_orders", JSON.stringify(orders));
             return { success: true, orderNumber, confirmationToken: "demo" };
         }
-        const { functions } = this.initializeFirebase();
-        const result = await functions.httpsCallable("submitOrder")(order);
-        return result.data;
+
+        const payload = JSON.stringify(order);
+        const url = this.getBackendUrl("submitOrder");
+        return this.fetchJson(url, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: payload,
+            timeoutMs: 20000
+        });
     },
 
     async getOrderConfirmation(orderNumber, confirmationToken) {
         if (this.isDemoMode()) {
             const orders = JSON.parse(localStorage.getItem("vk_orders") || "[]");
             const order = orders.find(item => item.orderNumber === orderNumber);
-            if (!order) throw new Error("Order was not found in this browser's demo storage.");
+            if (!order) throw new Error("Order not found in demo storage.");
             return order;
         }
-        const { functions } = this.initializeFirebase();
-        const result = await functions.httpsCallable("getOrderConfirmation")({
-            orderNumber,
-            confirmationToken
-        });
-        return result.data;
-    },
 
-    async getOrders() {
-        if (this.isDemoMode()) {
-            return JSON.parse(localStorage.getItem("vk_orders") || "[]");
-        }
-        const { db } = this.initializeFirebase();
-        const snapshot = await db.collection("orders").orderBy("createdAt", "desc").get();
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    },
-
-    async updateOrderStatus(orderId, status) {
-        if (this.isDemoMode()) {
-            const orders = JSON.parse(localStorage.getItem("vk_orders") || "[]");
-            const idx = orders.findIndex(o => o.id === orderId);
-            if (idx >= 0) {
-                orders[idx].status = status;
-                localStorage.setItem("vk_orders", JSON.stringify(orders));
-            }
-            return { success: true };
-        }
-        const { functions } = this.initializeFirebase();
-        const result = await functions.httpsCallable("updateOrderStatus")({ orderId, status });
-        return result.data;
-    },
-
-    async getProductSettings() {
-        if (this.isDemoMode()) {
-            return JSON.parse(localStorage.getItem("vk_product_settings") || "{}");
-        }
-        const { db } = this.initializeFirebase();
-        const snapshot = await db.collection("productSettings").get();
-        return snapshot.docs.reduce((settings, doc) => {
-            settings[doc.id] = doc.data();
-            return settings;
-        }, {});
-    },
-
-    async saveProductSettings(productId, settings) {
-        const product = (window.PRODUCTS || []).find(item => item.id === productId);
-        if (!product || !Number.isInteger(settings.dailyCapacity) || settings.dailyCapacity < 0) {
-            throw new Error("Product capacity must be a non-negative whole number.");
-        }
-        if (this.isDemoMode()) {
-            const allSettings = await this.getProductSettings();
-            allSettings[productId] = {
-                dailyCapacity: settings.dailyCapacity,
-                soldOut: settings.soldOut === true
-            };
-            localStorage.setItem("vk_product_settings", JSON.stringify(allSettings));
-            return;
-        }
-        const { db } = this.initializeFirebase();
-        await db.collection("productSettings").doc(productId).set({
-            dailyCapacity: settings.dailyCapacity,
-            soldOut: settings.soldOut === true
-        }, { merge: true });
-    },
-
-    async verifyPayment(orderId) {
-        if (this.isDemoMode()) {
-            const orders = JSON.parse(localStorage.getItem("vk_orders") || "[]");
-            const order = orders.find(item => item.id === orderId);
-            if (order) {
-                order.paymentStatus = "paid";
-                localStorage.setItem("vk_orders", JSON.stringify(orders));
-            }
-            return { success: true };
-        }
-        const { functions } = this.initializeFirebase();
-        const result = await functions.httpsCallable("verifyPayment")({ orderId });
-        return result.data;
-    },
-
-    async getRemainingCapacity(date, productId) {
-        if (this.isDemoMode()) {
-            const products = window.PRODUCTS || [];
-            const product = products.find(p => p.id === productId);
-            if (!product) throw new Error("Unknown product: " + productId);
-            const orders = JSON.parse(localStorage.getItem("vk_orders") || "[]");
-            const settings = JSON.parse(localStorage.getItem("vk_product_settings") || "{}");
-            const used = orders
-                .filter(order => order.pickupDate === date && order.status !== "cancelled")
-                .reduce((sum, order) => sum + (order.items || [])
-                    .filter(item => item.id === productId)
-                    .reduce((itemSum, item) => itemSum + Number(item.qty || 0), 0), 0);
-            const capacity = Number.isInteger(settings[productId]?.dailyCapacity)
-                ? settings[productId].dailyCapacity
-                : product.dailyCapacity;
-            return settings[productId]?.soldOut === true ? 0 : Math.max(0, capacity - used);
-        }
-        const { functions } = this.initializeFirebase();
-        const result = await functions.httpsCallable("getAvailability")({ date, productId });
-        return result.data.remaining;
+        const url = this.getBackendUrl("confirmation", { order: orderNumber, token: confirmationToken });
+        const payload = await this.fetchJson(url, { method: "GET", timeoutMs: 20000 });
+        return payload.order || payload;
     },
 
     generateDemoOrderNumber() {
@@ -161,7 +163,7 @@ const OrderService = {
         const key = "vk_demo_counter_" + dateStr;
         const next = Number(localStorage.getItem(key) || "0") + 1;
         localStorage.setItem(key, String(next));
-        return `VK-${dateStr}-${String(next).padStart(3, '0')}`;
+        return `AMK-${dateStr}-${String(next).padStart(3, '0')}`;
     }
 };
 
