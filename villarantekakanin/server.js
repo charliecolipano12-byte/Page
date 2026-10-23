@@ -12,6 +12,7 @@ const { rateLimit } = require("express-rate-limit");
 
 const app = express();
 const publicDirectory = __dirname;
+const clientDirectory = path.join(publicDirectory, "client");
 const sessionLifetimeMs = 7 * 24 * 60 * 60 * 1000;
 const scryptAsync = promisify(crypto.scrypt);
 const sessionSecret = process.env.SESSION_SECRET;
@@ -786,7 +787,7 @@ app.use((request, response, next) => {
     }
     next();
 });
-app.use(express.static(publicDirectory, {
+app.use(express.static(clientDirectory, {
     dotfiles: "deny",
     index: "index.html"
 }));

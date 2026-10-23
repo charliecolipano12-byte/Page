@@ -97,6 +97,23 @@ test("static file protection rejects encoded Windows path aliases", async contex
     const malformedEncoding = await fetch(`${baseUrl}/bad%ZZpath`, { redirect: "manual" });
     assert.equal(malformedEncoding.status, 400);
 
+    for (const clientPath of [
+        "/",
+        "/index.html",
+        "/menu.html",
+        "/about.html",
+        "/checkout.html",
+        "/login/",
+        "/signup/",
+        "/style.css",
+        "/auth.js",
+        "/js/orderService.js",
+        "/images/bibingka.jpg"
+    ]) {
+        const response = await fetch(`${baseUrl}${clientPath}`, { redirect: "manual" });
+        assert.equal(response.status, 200, `${clientPath} should serve a client asset`);
+    }
+
     const adminLogin = await fetch(`${baseUrl}/admin/login/`, { redirect: "manual" });
     assert.equal(adminLogin.status, 200);
     assert.match(await adminLogin.text(), /data-auth-form="login"/);
@@ -111,6 +128,8 @@ test("static file protection rejects encoded Windows path aliases", async contex
         "/admin/index.html",
         "/admin/admin.css",
         "/admin/admin.js",
+        "/admin/legacy.html",
+        "/admin/legacy.js",
         "/admin.html"
     ]) {
         const response = await fetch(`${baseUrl}${adminPath}`, { redirect: "manual" });
@@ -147,7 +166,14 @@ test("static file protection rejects encoded Windows path aliases", async contex
     const sessionCookie = signup.headers.get("set-cookie")?.split(";")[0];
     assert.ok(sessionCookie, "signup should establish an authenticated session");
 
-    for (const adminPath of ["/admin/", "/admin/index.html", "/admin/admin.js", "/admin.html"]) {
+    for (const adminPath of [
+        "/admin/",
+        "/admin/index.html",
+        "/admin/admin.js",
+        "/admin/legacy.html",
+        "/admin/legacy.js",
+        "/admin.html"
+    ]) {
         const response = await fetch(`${baseUrl}${adminPath}`, {
             headers: { Cookie: sessionCookie },
             redirect: "manual"
