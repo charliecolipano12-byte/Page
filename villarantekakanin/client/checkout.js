@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     const emptyCartState = document.getElementById("emptyCartState");
     const placeOrderButton = form.querySelector('[type="submit"]');
     const dateInput = document.getElementById("pickupDate");
+    const totalPiecesElement = document.getElementById("totalPieces");
     const totalElement = document.getElementById("total");
     let isSubmitting = false;
     let signedInUser = null;
@@ -22,7 +23,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 
     function formatMoney(amount) {
-        return `â‚±${Number(amount).toFixed(2)}`;
+        return `?${Number(amount).toFixed(2)}`;
+    }
+
+    function lineKey(item) {
+        const varieties = Array.isArray(item.varieties) ? [...item.varieties].sort() : [];
+        return `${item.packageId}|${varieties.join(",")}`;
     }
 
     function renderSummary() {
@@ -31,25 +37,30 @@ document.addEventListener("DOMContentLoaded", async function() {
         form.hidden = isEmpty;
         summaryItems.replaceChildren();
         if (isEmpty) {
+            totalPiecesElement.textContent = "0 pcs";
             totalElement.textContent = formatMoney(0);
             return;
         }
 
         cart.items.forEach(item => {
-            const product = products().find(candidate => candidate.id === item.id);
             const packageInfo = packages().find(candidate => candidate.id === item.packageId);
-            if (!product || !packageInfo) return;
+            if (!packageInfo) return;
+            const varieties = Array.isArray(item.varieties) ? [...item.varieties] : [];
+            const varietyNames = varieties.map(vid => {
+                const product = products().find(candidate => candidate.id === vid);
+                return product ? product.name : vid;
+            }).join(" + ");
             const row = document.createElement("div");
             row.className = "summary-item cart-edit-row";
-            row.dataset.productId = item.id;
             row.dataset.packageId = item.packageId;
+            row.dataset.varieties = varieties.slice().sort().join(",");
 
             const details = document.createElement("div");
             const name = document.createElement("strong");
-            name.textContent = product.name;
+            name.textContent = `${packageInfo.name}`;
             const packageName = document.createElement("p");
             packageName.className = "small-text";
-            packageName.textContent = `${packageInfo.name} Â· ${packageInfo.pieces} pcs Â· ${formatMoney(packageInfo.price)}`;
+            packageName.textContent = `${varietyNames} · ${packageInfo.name} · ${packageInfo.pieces} pcs x ${item.qty} = ${packageInfo.pieces * item.qty} pcs`;
             details.append(name, packageName);
 
             const controls = document.createElement("div");
@@ -61,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             quantity.step = "1";
             quantity.value = String(item.qty);
             quantity.dataset.action = "quantity";
-            quantity.setAttribute("aria-label", `${product.name}, ${packageInfo.name} quantity`);
+            quantity.setAttribute("aria-label", `${packageInfo.name} quantity`);
             const remove = document.createElement("button");
             remove.type = "button";
             remove.className = "btn btn-sm btn-outline cart-remove-button";
@@ -76,6 +87,11 @@ document.addEventListener("DOMContentLoaded", async function() {
             summaryItems.appendChild(row);
         });
 
+        const totalPieces = cart.items.reduce((sum, item) => {
+            const packageInfo = packages().find(candidate => candidate.id === item.packageId);
+            return sum + (packageInfo ? packageInfo.pieces * item.qty : 0);
+        }, 0);
+        totalPiecesElement.textContent = `${totalPieces} pcs`;
         totalElement.textContent = formatMoney(cart.subtotal());
     }
 
@@ -108,22 +124,28 @@ document.addEventListener("DOMContentLoaded", async function() {
     summaryItems.addEventListener("click", event => {
         const button = event.target.closest('button[data-action="remove"]');
         if (!button) return;
-        const row = button.closest("[data-product-id]");
+        const row = button.closest(".cart-edit-row");
         if (!row) return;
-        cart.remove(row.dataset.productId, row.dataset.packageId);
+        const packageId = row.dataset.packageId;
+        const varietiesStr = row.dataset.varieties || "";
+        const varieties = varietiesStr ? varietiesStr.split(",").filter(Boolean) : [];
+        cart.remove(packageId, varieties);
         renderSummary();
     });
 
     summaryItems.addEventListener("change", event => {
         const input = event.target.closest('input[data-action="quantity"]');
         if (!input) return;
-        const row = input.closest("[data-product-id]");
+        const row = input.closest(".cart-edit-row");
         const quantity = Number(input.value);
         if (!row || !Number.isInteger(quantity) || quantity < 1) {
             renderSummary();
             return;
         }
-        cart.update(row.dataset.productId, row.dataset.packageId, quantity);
+        const packageId = row.dataset.packageId;
+        const varietiesStr = row.dataset.varieties || "";
+        const varieties = varietiesStr ? varietiesStr.split(",").filter(Boolean) : [];
+        cart.update(packageId, varieties, quantity);
         renderSummary();
     });
 
@@ -213,26 +235,33 @@ document.addEventListener("DOMContentLoaded", async function() {
         let orderItems;
         try {
             orderItems = cart.items.map(item => {
-                const product = products().find(candidate => candidate.id === item.id);
                 const packageInfo = packages().find(candidate => candidate.id === item.packageId);
                 if (
-                    !product ||
                     !packageInfo ||
                     !Number.isSafeInteger(item.qty) ||
                     item.qty < 1 ||
                     !Number.isSafeInteger(packageInfo.price) ||
                     packageInfo.price < 0
                 ) {
-                    throw new Error("An item or package in your cart is no longer available. Please review your cart.");
+                    throw new Error("An item or tray size in your cart is no longer available. Please review your cart.");
+                }
+                const varieties = Array.isArray(item.varieties) ? item.varieties : [];
+                if (varieties.length < 1 || varieties.length > 3) {
+                    throw new Error("Each tray must have 1 to 3 varieties.");
+                }
+                if (new Set(varieties).size !== varieties.length) {
+                    throw new Error("Duplicate variety.");
+                }
+                if (!varieties.every(v => products().some(p => p.id === v))) {
+                    throw new Error("Invalid variety.");
                 }
                 return {
-                    id: product.id,
-                    name: product.name,
                     packageId: packageInfo.id,
                     packageName: packageInfo.name,
                     pieces: packageInfo.pieces,
                     price: packageInfo.price,
-                    qty: item.qty
+                    qty: item.qty,
+                    varieties: varieties.slice()
                 };
             });
         } catch (error) {
@@ -242,7 +271,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         const subtotal = orderItems.reduce((sum, item) => {
             const packageInfo = packages().find(candidate => candidate.id === item.packageId);
-            return sum + packageInfo.price * item.qty;
+            return sum + (packageInfo ? packageInfo.price * item.qty : 0);
         }, 0);
         if (!Number.isSafeInteger(subtotal) || subtotal < 0) {
             checkoutError.textContent = "The order total is outside the supported range. Please review your cart.";

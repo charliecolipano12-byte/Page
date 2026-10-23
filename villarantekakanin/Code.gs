@@ -472,14 +472,28 @@ function submitOrder(payload) {
   const availablePackages = getPackagesFromSheet();
 
   items.forEach(item => {
-    const product = PRODUCT_CATALOG.find(entry => entry.id === String(item.id));
     const packageInfo = availablePackages.find(entry => entry.id === String(item.packageId));
     const qty = Number(item.qty || 0);
-    if (!product || !packageInfo) throw new Error("Unknown product or package.");
+    if (!packageInfo) throw new Error("Unknown product or package.");
     if (!Number.isSafeInteger(qty) || qty < 1) throw new Error("Invalid package quantity.");
+
+    let varietyIds = [];
+    if (Array.isArray(item.varieties)) {
+      varietyIds = item.varieties.map(v => String(v));
+    } else if (item.id) {
+      varietyIds = [String(item.id)];
+    }
+    if (varietyIds.length < 1 || varietyIds.length > 3) throw new Error("Choose 1 to 3 varieties.");
+    if (new Set(varietyIds).size !== varietyIds.length) throw new Error("Duplicate variety.");
+    const productsInCatalog = getProductsFromSheet();
+    const catalogMap = {};
+    productsInCatalog.forEach(pr => { if (pr.id) catalogMap[String(pr.id)] = pr; });
+    PRODUCT_CATALOG.forEach(pr => { if (pr.id && !catalogMap[pr.id]) catalogMap[pr.id] = pr; });
+    if (!varietyIds.every(id => catalogMap[id])) throw new Error("Unknown product or package.");
+    const varietyNames = varietyIds.map(id => catalogMap[id].name || id);
     orderDetail.push({
-      productId: product.id,
-      productName: product.name,
+      productId: varietyIds.join("+"),
+      productName: varietyNames.join(" + "),
       qty,
       packageId: packageInfo.id,
       packageName: packageInfo.name,
@@ -488,94 +502,7 @@ function submitOrder(payload) {
     });
     subtotal += qty * packageInfo.price;
   });
-  if (!Number.isSafeInteger(subtotal) || subtotal < 0) return { success: false, message: "The order total is outside the supported range." };
-
-  const lock = LockService.getScriptLock();
-  lock.waitLock(30000);
-  try {
-    const deliveryFee = 0;
-    const total = subtotal;
-    const gcashReference = "";
-
-    const orderNumber = generateOrderNumber();
-    const token = Utilities.getUuid();
-    const tokenHash = sha256Hex(token);
-    const now = Utilities.formatDate(new Date(), "Asia/Manila", "yyyy-MM-dd HH:mm:ss");
-    const row = [
-      now,
-      orderNumber,
-      "pending",
-      pickupDate,
-      pickupTime,
-      "pickup",
-      sanitizeForCell(name),
-      sanitizeForCell(phone),
-      sanitizeForCell(email),
-      orderDetail.map(item => `${item.productName} — ${item.packageName} (${item.pieces} pcs) x${item.qty}`).join("; "),
-      subtotal,
-      deliveryFee,
-      total,
-      paymentMethod,
-      sanitizeForCell(gcashReference),
-      "unpaid",
-      "",
-      sanitizeForCell(notes),
-      tokenHash,
-      sanitizeForCell(accountEmail)
-    ];
-
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_TABS.ORDERS);
-    sheet.appendRow(row);
-
-    const orderItemsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_TABS.ORDER_ITEMS);
-    orderDetail.forEach(item => {
-      orderItemsSheet.appendRow([
-        orderNumber,
-        pickupDate,
-        item.productId,
-        item.productName,
-        item.qty,
-        "pending",
-        item.packageId,
-        item.packageName,
-        item.pieces,
-        item.price
-      ]);
-    });
-
-    if (String(settings.notifyOwner || "FALSE").toLowerCase() === "true") {
-      try {
-        MailApp.sendEmail(
-          String(settings.ownerEmail || OWNER_EMAIL) === "owner@example.com" ? OWNER_EMAIL : String(settings.ownerEmail || OWNER_EMAIL),
-          `New order ${orderNumber}`,
-          `Customer: ${name}\nPhone: ${phone}\nPickup date: ${pickupDate}\nPreferred time: ${pickupTime}\nItems: ${orderDetail.map(item => `${item.productName} — ${item.packageName} (${item.pieces} pcs) x${item.qty}`).join(", ")}\nTotal: ₱${total.toFixed(2)}\nPayment on pickup: ${paymentMethod}\nNotes/allergies: ${notes}`
-        );
-      } catch (sendError) {
-        Logger.log(`Owner notification email failed for ${orderNumber}: ${sendError}`);
-      }
-    }
-
-    if (String(settings.notifyCustomer || "FALSE").toLowerCase() === "true" && email) {
-      try {
-        MailApp.sendEmail(
-          email,
-          `Your order confirmation - ${orderNumber}`,
-          `Thank you for ordering with Ate My's Kakanin. Your order number is ${orderNumber}.\n\nPreferred pickup date: ${pickupDate}\nPreferred pickup time: ${pickupTime}\nTotal: ₱${total.toFixed(2)}\nPayment on pickup: ${paymentMethod}`
-        );
-      } catch (sendError) {
-        Logger.log(`Customer confirmation email failed for ${orderNumber}: ${sendError}`);
-      }
-    }
-
-    // TODO: Configure an authorized Messenger integration or page link for owner order notifications.
-    // TODO: Configure retention cleanup after one year and a process for legal/accounting retention exceptions.
-    return { success: true, orderNumber, confirmationToken: token, total };
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-function findOrderByNumber(orderNumber) {
+  if (!Number.isSafeInteger(subtotal) || subtotal < 0) return { success: false, message: "The order total is outside the supported range." };function findOrderByNumber(orderNumber) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_TABS.ORDERS);
   if (!sheet) return null;
   const rows = sheet.getDataRange().getValues();
@@ -707,3 +634,4 @@ function onEdit(e) {
     }
   }
 }
+

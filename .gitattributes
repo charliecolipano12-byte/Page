@@ -1,0 +1,5 @@
+* text=auto
+
+# Images are binary assets; do not normalize line endings.
+*.jpg binary
+*.webp binary

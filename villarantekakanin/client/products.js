@@ -12,7 +12,8 @@ const PRODUCTS = [
         id: "puto-cheese",
         name: "Puto Cheese",
         description: "Soft, fluffy steamed rice cakes topped with creamy cheese.",
-        allergens: "May contain milk, wheat, and eggs."
+        allergens: "May contain milk, wheat, and eggs.",
+        image: "images/puto.jpg"
     },
     {
         id: "pichi-pichi",

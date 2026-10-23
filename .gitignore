@@ -10,3 +10,7 @@ firebase-debug.log
 *.cache
 dist/
 build/
+
+_audit/
+villarantekakanin/Code.gs.bak
+villarantekakanin/Code_new.gs

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ate My's Kakanin - Menu</title>
-    <meta name="description" content="Browse Ate My's Kakanin menu and select aluminum tray or bilao packages for pickup.">
+    <meta name="description" content="Browse Ate My's Kakanin menu and select aluminum tray or bilao sizes for pickup.">
     <meta property="og:title" content="Kakanin Menu - Ate My's Kakanin">
-    <meta property="og:description" content="Choose from homemade Filipino kakanin and package sizes.">
+    <meta property="og:description" content="Choose from homemade Filipino kakanin and tray sizes.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/bibingka.jpg">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
@@ -33,12 +33,19 @@
                 <p class="allergy-note">General ingredients include rice flour, glutinous rice, cassava, coconut milk, sugar, grated coconut, and other ingredients depending on the product. Customers with food allergies should tell us before ordering; cross-contact with other allergens may occur.</p>
             </div>
         </section>
+        <section class="tray-gallery-section" id="tray-gallery-section" aria-labelledby="tray-gallery-title" hidden>
+            <h2 class="section-title" id="tray-gallery-title">Our Trays</h2>
+            <div class="tray-gallery-grid" id="tray-gallery"></div>
+            <p class="small-text">Every order is arranged on a tray and tied with a ribbon.</p>
+            <button class="btn btn-outline tray-gallery-more" id="tray-gallery-more" type="button" hidden>See more photos</button>
+        </section>
     </main>
 
     <div data-site-footer></div>
 
     <script src="config.js"></script>
     <script src="products.js"></script>
+    <script src="tray-photos.js"></script>
     <script src="cart.js"></script>
     <script src="script.js"></script>
     <script src="js/orderService.js"></script>

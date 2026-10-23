@@ -7,14 +7,25 @@ class Cart {
 
     load() {
         try {
-            const data = localStorage.getItem(this.key);
+            const data = typeof localStorage !== "undefined" ? localStorage.getItem(this.key) : null;
             const items = data ? JSON.parse(data) : [];
             if (!Array.isArray(items)) throw new Error("Cart storage is not an array.");
-            return items.filter(item =>
-                item && typeof item.id === "string" &&
-                typeof item.packageId === "string" &&
-                Number.isInteger(item.qty) && item.qty > 0
-            );
+            return items.map(item => {
+                if (!item || typeof item.packageId !== "string") return null;
+                let varieties;
+                if (Array.isArray(item.varieties)) {
+                    varieties = item.varieties.filter(v => typeof v === "string");
+                } else if (typeof item.id === "string") {
+                    varieties = [item.id];
+                } else {
+                    return null;
+                }
+                if (varieties.length < 1 || varieties.length > 3) return null;
+                if (new Set(varieties).size !== varieties.length) return null;
+                const qty = item.qty;
+                if (!Number.isInteger(qty) || qty < 1) return null;
+                return { packageId: item.packageId, varieties: [...varieties].sort(), qty };
+            }).filter(Boolean);
         } catch (e) {
             console.error("Unable to load the saved cart:", e);
             return [];
@@ -23,41 +34,63 @@ class Cart {
 
     save() {
         try {
-            localStorage.setItem(this.key, JSON.stringify(this.items));
+            if (typeof localStorage !== "undefined") {
+                localStorage.setItem(this.key, JSON.stringify(this.items));
+            }
         } catch (e) {
             console.error("Unable to save the cart:", e);
         }
-        this.updateBadge();
+        try {
+            this.updateBadge();
+        } catch (e) {
+            // ignore in non-browser environments
+        }
     }
 
-    add(productId, packageId, qty = 1) {
-        if (!(window.PRODUCTS || []).some(product => product.id === productId) ||
-            !(window.PACKAGES || []).some(item => item.id === packageId) ||
-            !Number.isInteger(qty) || qty < 1) {
-            throw new Error("A valid product, package, and positive whole-number quantity are required.");
-        }
-        const existing = this.items.find(i => i.id === productId && i.packageId === packageId);
+    mergeKey(packageId, varieties) {
+        return `${packageId}|${[...varieties].sort().join(",")}`;
+    }
+
+    validate(packageId, varieties, qty) {
+        const packages = typeof window !== "undefined" && window.PACKAGES ? window.PACKAGES : [];
+        const products = typeof window !== "undefined" && window.PRODUCTS ? window.PRODUCTS : [];
+        if (!packages.some(p => p.id === packageId)) throw new Error("Invalid package.");
+        if (!Array.isArray(varieties) || varieties.length < 1 || varieties.length > 3) throw new Error("Choose 1 to 3 varieties.");
+        if (new Set(varieties).size !== varieties.length) throw new Error("Duplicate variety.");
+        if (!varieties.every(v => products.some(p => p.id === v))) throw new Error("Invalid variety.");
+        if (!Number.isInteger(qty) || qty < 1) throw new Error("Invalid quantity.");
+    }
+
+    add(packageId, varieties, qty = 1) {
+        const sorted = [...varieties].sort();
+        this.validate(packageId, sorted, qty);
+        const key = this.mergeKey(packageId, sorted);
+        const existing = this.items.find(i => this.mergeKey(i.packageId, i.varieties) === key);
         if (existing) {
             existing.qty += qty;
         } else {
-            this.items.push({ id: productId, packageId, qty });
+            this.items.push({ packageId, varieties: sorted, qty });
         }
         this.save();
     }
 
-    update(productId, packageId, qty) {
-        const item = this.items.find(i => i.id === productId && i.packageId === packageId);
-        if (!item) return;
+    update(packageId, varieties, qty) {
+        const sorted = [...varieties].sort();
         if (!Number.isInteger(qty) || qty <= 0) {
-            this.remove(productId, packageId);
+            this.remove(packageId, sorted);
             return;
         }
+        const key = this.mergeKey(packageId, sorted);
+        const item = this.items.find(i => this.mergeKey(i.packageId, i.varieties) === key);
+        if (!item) return;
         item.qty = qty;
         this.save();
     }
 
-    remove(productId, packageId) {
-        this.items = this.items.filter(i => i.id !== productId || i.packageId !== packageId);
+    remove(packageId, varieties) {
+        const sorted = [...varieties].sort();
+        const key = this.mergeKey(packageId, sorted);
+        this.items = this.items.filter(i => this.mergeKey(i.packageId, i.varieties) !== key);
         this.save();
     }
 
@@ -71,9 +104,8 @@ class Cart {
     }
 
     subtotal() {
-        const products = window.PRODUCTS || [];
+        const priceList = (typeof window !== "undefined" && window.PACKAGES) ? window.PACKAGES : [];
         return this.items.reduce((sum, i) => {
-            const priceList = window.PACKAGES || [];
             const p = priceList.find(item => item.id === i.packageId);
             const price = Number(p && p.price);
             return sum + (Number.isFinite(price) ? price * i.qty : 0);
@@ -81,6 +113,7 @@ class Cart {
     }
 
     updateBadge() {
+        if (typeof document === "undefined") return;
         const badge = document.getElementById("cart-count");
         if (badge) {
             badge.textContent = this.count().toString();
@@ -92,7 +125,15 @@ class Cart {
 if (typeof window !== "undefined") {
     window.Cart = Cart;
     window.cart = new Cart();
-    document.addEventListener("DOMContentLoaded", () => {
-        window.cart.updateBadge();
-    });
+    if (typeof document !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.cart) {
+                try { window.cart.updateBadge(); } catch (e) {}
+            }
+        });
+    }
+}
+
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = { Cart };
 }
