@@ -39,6 +39,7 @@
                         <div class="input-wrapper">
                             <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required placeholder="Enter your password">
                         </div>
+                        <label class="checkbox-label"><input type="checkbox" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"> Show password</label>
                     </div>
 
                     <button class="btn btn-primary btn-full" type="submit">Login</button>
