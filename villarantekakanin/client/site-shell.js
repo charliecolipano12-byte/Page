@@ -1,6 +1,13 @@
 (() => {
     const currentPage = location.pathname.split("/").pop() || "index.html";
-    const pages = [
+    const isHome = currentPage === "index.html";
+    const pages = isHome ? [
+        ["#features", "Features"],
+        ["#how-it-works", "How it works"],
+        ["#faq", "FAQ"],
+        ["menu.html", "Menu"],
+        ["checkout.html", "Cart"]
+    ] : [
         ["index.html", "Home"],
         ["menu.html", "Menu"],
         ["about.html", "Our Story"],

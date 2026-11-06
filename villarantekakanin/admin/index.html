@@ -52,11 +52,23 @@
                         <button class="button button-outline" type="button" data-refresh-orders>Refresh data</button>
                     </div>
                     <div class="metric-grid">
-                        <article class="metric-card metric-highlight"><span>Today's pickups</span><strong data-metric="today">—</strong></article>
-                        <article class="metric-card"><span>Pending</span><strong data-metric="pending">—</strong></article>
-                        <article class="metric-card"><span>Confirmed</span><strong data-metric="confirmed">—</strong></article>
-                        <article class="metric-card"><span>Ready for pickup</span><strong data-metric="ready">—</strong></article>
-                        <article class="metric-card"><span>Completed</span><strong data-metric="completed">—</strong></article>
+                        <button type="button" class="metric-card metric-highlight metric-card-button" data-filter-status="today" aria-label="View today's pickups"><span>Today's pickups</span><strong data-metric="today">—</strong></button>
+                        <button type="button" class="metric-card metric-card-button" data-filter-status="pending" aria-label="View pending orders"><span>Pending</span><strong data-metric="pending">—</strong></button>
+                        <button type="button" class="metric-card metric-card-button" data-filter-status="confirmed" aria-label="View confirmed orders"><span>Confirmed</span><strong data-metric="confirmed">—</strong></button>
+                        <button type="button" class="metric-card metric-card-button" data-filter-status="ready" aria-label="View ready-for-pickup orders"><span>Ready for pickup</span><strong data-metric="ready">—</strong></button>
+                        <button type="button" class="metric-card metric-card-button" data-filter-status="completed" aria-label="View completed orders"><span>Completed</span><strong data-metric="completed">—</strong></button>
+                    </div>
+                    <div class="overview-lists">
+                        <section class="content-card" aria-labelledby="needs-action-title">
+                            <h2 id="needs-action-title">Needs action</h2>
+                            <p class="section-intro">Pending orders, soonest pickup first.</p>
+                            <ul class="action-list" data-needs-action><li class="action-empty">Loading…</li></ul>
+                        </section>
+                        <section class="content-card" aria-labelledby="upcoming-title">
+                            <h2 id="upcoming-title">Upcoming pickups</h2>
+                            <p class="section-intro">Pickups today and in the next 7 days.</p>
+                            <ul class="action-list" data-upcoming-pickups><li class="action-empty">Loading…</li></ul>
+                        </section>
                     </div>
                     <div class="content-card overview-note">
                         <h2>Order coordination</h2>
@@ -101,10 +113,20 @@
 
                 <section class="admin-view" data-view-panel="products" aria-labelledby="products-title" hidden>
                     <div class="view-heading">
-                        <div><p class="eyebrow">Customer menu and package pricing</p><h1 id="products-title">Products</h1></div>
-                        <button class="button button-outline" type="button" data-refresh-packages>Refresh</button>
+                        <div><p class="eyebrow">Customer menu and tray packages</p><h1 id="products-title">Products</h1></div>
+                        <div class="view-actions">
+                            <button class="button button-outline" type="button" data-refresh-products>Refresh products</button>
+                            <button class="button button-outline" type="button" data-refresh-packages>Refresh packages</button>
+                        </div>
                     </div>
                     <div class="content-card">
+                        <h2 class="subsection-title">Menu products</h2>
+                        <p class="section-intro">Edit product details shown on the customer menu. IDs are fixed and cannot be changed here. Photo is a path like <code>images/puto.jpg</code> (leave empty if no photo). Turning Available off hides the item from the public menu and blocks it in new orders.</p>
+                        <p class="result-count" data-products-count>Loading products…</p>
+                        <div class="product-editor-list" data-products-list></div>
+                    </div>
+                    <div class="content-card" style="margin-top:14px">
+                        <h2 class="subsection-title">Tray packages</h2>
                         <p class="section-intro">Manage package names, piece counts, and prices. Changes update the customer menu and the prices used when validating new orders.</p>
                         <p class="result-count" data-packages-count>Loading packages…</p>
                         <div class="package-list" data-packages-list></div>

@@ -552,7 +552,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 if (product.image) {
                     image = `<div class="product-image product-image--${escapeHtml(product.id)}"><picture><source srcset="${escapeHtml(product.image.replace(/\.jpg$/i, ".webp"))}" type="image/webp"><img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy"></picture></div>`;
                 } else {
-                    image = `<div class="product-image product-image-placeholder"><span>${escapeHtml(product.name)}</span></div>`;
+                    image = `<div class="product-image product-image-placeholder"><span>${escapeHtml(product.name)}</span><small>Photo coming soon</small></div>`;
                 }
                 card.innerHTML = `
                     ${image}
@@ -587,12 +587,13 @@ document.addEventListener("DOMContentLoaded", async function() {
         renderPackagePrices();
         renderTrayGallery();
         renderProducts(Array.isArray(config && config.products) ? config.products : (window.PRODUCTS || []));
+        if (cart && typeof cart.removeUnavailable === "function") cart.removeUnavailable(window.PRODUCTS || []);
         await resumePendingCartItem();
     } catch (error) {
         console.error("Unable to load public product configuration:", error);
         renderPackagePrices();
         renderTrayGallery();
-        renderProducts(window.PRODUCTS || [], "Server configuration could not be loaded. Showing the current tray size details; contact us if your order cannot be submitted.");
+        renderProducts(window.PRODUCTS || [], "We could not load the latest prices, so the details shown may be out of date. If you have trouble ordering, please contact us.");
         await resumePendingCartItem();
     }
 });

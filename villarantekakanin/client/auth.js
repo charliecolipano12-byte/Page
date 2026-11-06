@@ -1,8 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("[data-auth-form]");
     const message = document.getElementById("auth-message");
     const submitButton = form?.querySelector('button[type="submit"]');
     const authStatus = document.querySelector("[data-auth-status]");
+    const summary = document.getElementById("auth-summary");
 
     function safeReturnPath(value) {
         if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) return "";
@@ -120,8 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
     deleteAccountForm?.addEventListener("submit", async event => {
         event.preventDefault();
         deleteAccountMessage.textContent = "";
-        const submitButton = deleteAccountForm.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
+        const deleteSubmit = deleteAccountForm.querySelector('button[type="submit"]');
+        deleteSubmit.disabled = true;
 
         try {
             const response = await fetch("/api/auth/account", {
@@ -143,24 +144,102 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             deleteAccountMessage.textContent = error.message || "Could not connect. Please try again.";
             deleteAccountMessage.classList.add("error");
-            submitButton.disabled = false;
+            deleteSubmit.disabled = false;
         }
     });
+
+    function fieldFor(name) {
+        return form?.querySelector(`[name="${name}"]`) || null;
+    }
+
+    function errorFor(name) {
+        return form?.querySelector(`#${name}-error`) || document.getElementById(`${name}-error`);
+    }
+
+    function setFieldError(name, text) {
+        const field = fieldFor(name);
+        const error = errorFor(name);
+        if (error) error.textContent = text || "";
+        if (field) {
+            if (text) field.setAttribute("aria-invalid", "true");
+            else field.removeAttribute("aria-invalid");
+        }
+    }
+
+    function setSummary(text) {
+        if (!summary) return;
+        summary.textContent = text || "";
+        summary.hidden = !text;
+    }
+
+    function clearErrors() {
+        setSummary("");
+        if (message) {
+            message.textContent = "";
+            message.classList.remove("error");
+        }
+        form?.querySelectorAll("[aria-invalid='true']").forEach(el => el.removeAttribute("aria-invalid"));
+        form?.querySelectorAll(".field-error").forEach(el => { el.textContent = ""; });
+    }
+
+    function mapServerError(text) {
+        const msg = typeof text === "string" ? text : "";
+        if (/email/i.test(msg) && /valid|format|required/i.test(msg)) return { field: "email", message: msg };
+        if (/password/i.test(msg) && /match|confirm/i.test(msg)) return { field: "confirmPassword", message: msg };
+        if (/password/i.test(msg)) return { field: "password", message: msg };
+        if (/name/i.test(msg)) return { field: "name", message: msg };
+        return { field: null, message: msg || "Authentication failed." };
+    }
+
+    function updatePasswordChecklist() {
+        if (!form || form.dataset.authForm !== "signup") return;
+        const pw = fieldFor("password");
+        const confirm = fieldFor("confirmPassword");
+        if (!pw || !confirm) return;
+        const lengthRule = document.getElementById("pw-rule-length");
+        const matchRule = document.getElementById("pw-rule-match");
+        const lenOk = pw.value.length >= 12;
+        const hasConfirm = confirm.value.length > 0;
+        const matchOk = hasConfirm && pw.value === confirm.value;
+
+        if (lengthRule) {
+            lengthRule.dataset.state = !pw.value ? "pending" : (lenOk ? "ok" : "fail");
+        }
+        if (matchRule) {
+            matchRule.dataset.state = !hasConfirm ? "pending" : (matchOk ? "ok" : "fail");
+        }
+
+        if (hasConfirm && !matchOk) {
+            setFieldError("confirmPassword", "The passwords do not match.");
+        } else if (hasConfirm && matchOk) {
+            setFieldError("confirmPassword", "");
+        }
+    }
+
+    if (form && form.dataset.authForm === "signup") {
+        ["password", "confirmPassword"].forEach(name => {
+            const el = fieldFor(name);
+            el?.addEventListener("input", updatePasswordChecklist);
+            el?.addEventListener("blur", updatePasswordChecklist);
+        });
+        updatePasswordChecklist();
+    }
 
     if (form) {
         form.addEventListener("submit", async event => {
             event.preventDefault();
-            message.textContent = "";
-            message.classList.remove("error");
+            clearErrors();
 
             const formData = new FormData(form);
             const payload = Object.fromEntries(formData.entries());
             if (form.dataset.authForm === "signup") {
                 payload.accountPrivacy = formData.get("accountPrivacy") === "on";
             }
+
             if (form.dataset.authForm === "signup" && payload.password !== payload.confirmPassword) {
-                message.textContent = "The passwords do not match.";
-                message.classList.add("error");
+                setFieldError("confirmPassword", "The passwords do not match.");
+                setSummary("Fix the highlighted fields and try again.");
+                fieldFor("confirmPassword")?.focus();
                 return;
             }
 
@@ -177,13 +256,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
                     body: JSON.stringify(payload)
                 });
-                const result = await response.json();
+                const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || "Authentication failed.");
 
                 window.location.assign(returnPath || "/index.html");
             } catch (error) {
-                message.textContent = error.message || "Could not connect. Please try again.";
-                message.classList.add("error");
+                const mapped = mapServerError(error.message);
+                if (mapped.field) setFieldError(mapped.field, mapped.message);
+                setSummary(mapped.message);
+                if (message) {
+                    message.textContent = mapped.message;
+                    message.classList.add("error");
+                }
+                if (mapped.field) fieldFor(mapped.field)?.focus();
                 submitButton.disabled = false;
                 submitButton.textContent = form.dataset.authForm === "signup" ? "Create account" : "Login";
             }

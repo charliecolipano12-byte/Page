@@ -35,16 +35,22 @@
             </div>
         </section>
 
-        <section class="features-section" aria-labelledby="features-title">
+        <section class="features-section" id="how-it-works" aria-labelledby="features-title">
             <div class="container">
                 <header class="section-header">
-                    <h2 id="features-title" class="section-title">Pickup in Calinan</h2>
+                    <h2 id="features-title" class="section-title">How Ordering Works</h2>
                     <p class="section-subtitle">Pickup at P-2 Cawayan, Calinan, Davao City. Pickup date and time are arranged with you after you send your preferred schedule.</p>
                 </header>
+                <ol class="how-steps">
+                    <li><strong>Choose</strong> your kakanin and tray size.</li>
+                    <li><strong>Pick</strong> your preferred pickup date and time.</li>
+                    <li><strong>We confirm</strong> availability with you.</li>
+                    <li><strong>Pick up and pay</strong> in Calinan (cash, GCash or Maribank).</li>
+                </ol>
             </div>
         </section>
 
-        <section class="featured-section" aria-labelledby="featured-title">
+        <section class="featured-section" id="features" aria-labelledby="featured-title">
             <div class="container">
                 <header class="section-header">
                     <h2 id="featured-title" class="section-title">Our Kakanin</h2>
@@ -56,21 +62,26 @@
             </div>
         </section>
 
+        <section class="testimonials-section" id="testimonials" aria-labelledby="testimonials-title" hidden></section>
+
         <section class="values-section" aria-labelledby="freshness-title">
             <div class="container">
-                <h2 class="section-title" id="freshness-title">Freshness and Storage</h2>
-                <ul class="info-list">
-                    <li>Kakanin is best eaten the same day it is made.</li>
-                    <li>Refrigerate leftovers in a clean, airtight container at 4°C or below. They keep for about 2 to 3 days; items with cheese or dairy may keep for less.</li>
-                    <li>Keep Tikoy sealed in a cool, dry place if shelf-stable, or refrigerate it if fresh or homemade. Slices can be pan-fried.</li>
-                    <li>Refrigerate Cassava Flan promptly and eat it within 2 to 3 days.</li>
-                    <li>Reheat by steaming for a few minutes or microwaving in short intervals while covered.</li>
-                    <li>Do not leave perishable kakanin at room temperature for more than 2 hours, or 1 hour if above 32°C.</li>
-                </ul>
+                <details class="freshness-details" id="freshness-details">
+                    <summary id="freshness-title" class="section-title freshness-summary">Freshness and Storage</summary>
+                    <ul class="info-list">
+                        <li>Kakanin is best eaten the same day it is made.</li>
+                        <li>Refrigerate leftovers in a clean, airtight container at 4°C or below. They keep for about 2 to 3 days; items with cheese or dairy may keep for less.</li>
+                        <li>Keep Tikoy sealed in a cool, dry place if shelf-stable, or refrigerate it if fresh or homemade. Slices can be pan-fried.</li>
+                        <li>Refrigerate Cassava Flan promptly and eat it within 2 to 3 days.</li>
+                        <li>Reheat by steaming for a few minutes or microwaving in short intervals while covered.</li>
+                        <li>Do not leave perishable kakanin at room temperature for more than 2 hours, or 1 hour if above 32°C.</li>
+                    </ul>
+                </details>
             </div>
         </section>
 
-        <section class="faq-section" aria-labelledby="faq-title">
+
+        <section class="faq-section" id="faq" aria-labelledby="faq-title">
             <div class="container">
                 <h2 class="section-title" id="faq-title">Frequently Asked Questions</h2>
                 <details><summary>What kakanin are available?</summary><p>Puto Cheese, Pichi-Pichi, Kutsinta, Palitaw, Sapin-Sapin, Tikoy, Biko, Suman, Maja Blanca, and Cassava Flan. Bibingka is seasonal, available during the Christmas season, and should be ordered in advance.</p></details>
@@ -84,12 +95,24 @@
                 <details><summary>How should I store leftovers?</summary><p>See the freshness and storage guidance above. Kakanin is best eaten the day it is made.</p></details>
             </div>
         </section>
+        <section class="cta-section" aria-labelledby="cta-title">
+            <div class="container">
+                <h2 id="cta-title" class="section-title">Ready to order?</h2>
+                <p class="section-subtitle">Pick your kakanin and tray size, then send your preferred pickup schedule.</p>
+                <div class="hero-actions">
+                    <a href="menu.html" class="btn btn-primary">View Menu</a>
+                    <a href="checkout.html" class="btn btn-secondary">Place an Order</a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <div data-site-footer></div>
 
     <script src="config.js"></script>
+    <script src="testimonials.js"></script>
     <script src="products.js"></script>
+
     <script src="cart.js"></script>
     <script src="js/orderService.js"></script>
     <script src="script.js"></script>

@@ -25,28 +25,33 @@
         </section>
 
         <section class="auth-form" aria-label="Login form">
-            <div class="form-container">
-                <form id="login-form" data-auth-form="login" novalidate>
-                    <div class="form-group">
-                        <label for="email">Email address</label>
-                        <div class="input-wrapper">
-                            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
-                        </div>
-                    </div>
+            <div class="auth-layout auth-layout--single">
+                <div class="form-container">
+                    <form id="login-form" data-auth-form="login" novalidate>
+                        <p class="auth-summary-error" id="auth-summary" role="alert" aria-live="assertive" hidden></p>
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="input-wrapper">
-                            <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required placeholder="Enter your password">
+                        <div class="form-group" data-field="email">
+                            <label for="email">Email address</label>
+                            <div class="input-wrapper">
+                                <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-error" placeholder="you@example.com">
+                            </div>
+                            <p class="field-error" id="email-error" aria-live="polite"></p>
                         </div>
-                        <label class="checkbox-label"><input type="checkbox" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"> Show password</label>
-                    </div>
 
-                    <button class="btn btn-primary btn-full" type="submit">Login</button>
-                    <p class="form-links" id="auth-message" role="status" aria-live="polite"></p>
-                </form>
-                <p class="form-links">New here? <a href="../signup/">Create an account</a></p>
-                <p class="form-links"><a href="../index.html">Return to the home page</a></p>
+                        <div class="form-group" data-field="password">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper">
+                                <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required aria-describedby="password-error" placeholder="Enter your password">
+                            </div>
+                            <p class="field-error" id="password-error" aria-live="polite"></p>
+                        </div>
+
+                        <button class="btn btn-primary btn-full" type="submit">Login</button>
+                        <p class="form-links" id="auth-message" role="status" aria-live="polite"></p>
+                    </form>
+                    <p class="form-links">Forgot your password? Message us on Facebook (Mylen Villarante) or call 0951 886 4526.</p>
+                    <p class="form-links">New here? <a href="../signup/">Create an account</a></p>
+                </div>
             </div>
         </section>
     </main>
@@ -57,5 +62,6 @@
 
     <script src="../script.js"></script>
     <script src="../auth.js"></script>
+    <script src="../show-password.js"></script>
 </body>
 </html>

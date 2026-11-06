@@ -425,6 +425,49 @@ async function postAppsScriptAdmin(action, data = {}) {
     }
 }
 
+async function fetchAppsScriptPublicConfig() {
+    const endpoint = String(process.env.APPS_SCRIPT_URL || "").trim();
+    if (!endpoint || endpoint === "YOUR_APPS_SCRIPT_WEB_APP_URL") return null;
+
+    const endpointUrl = new URL(endpoint);
+    if (endpointUrl.protocol !== "https:" && process.env.NODE_ENV !== "development") {
+        return null;
+    }
+    endpointUrl.searchParams.set("action", "config");
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    try {
+        let response = await fetch(endpointUrl, {
+            method: "GET",
+            redirect: "manual",
+            headers: { Accept: "application/json" },
+            signal: controller.signal
+        });
+
+        if ([301, 302, 303].includes(response.status)) {
+            const location = response.headers.get("location");
+            if (!location) return null;
+            const redirectUrl = new URL(location, endpointUrl);
+            if (redirectUrl.hostname !== "script.googleusercontent.com") return null;
+            response = await fetch(redirectUrl, {
+                method: "GET",
+                redirect: "error",
+                headers: { Accept: "application/json" },
+                signal: controller.signal
+            });
+        }
+
+        if (!response.ok) return null;
+        const result = await response.json();
+        return result && result.success === true ? result : null;
+    } catch {
+        return null;
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
 app.disable("x-powered-by");
 app.use((request, response, next) => {
     response.set({
@@ -468,6 +511,35 @@ const authLimiter = rateLimit({
 app.get("/api/auth/session", (request, response) => {
     response.set("Cache-Control", "no-store");
     response.json({ user: request.session.user || null });
+});
+
+app.get("/api/products", async (request, response) => {
+    response.set("Cache-Control", "no-store");
+    const config = await fetchAppsScriptPublicConfig();
+    if (!config || !Array.isArray(config.products)) {
+        return response.json({ success: false });
+    }
+    const products = config.products
+        .filter(product => product && typeof product.id === "string")
+        .map((product, index) => ({
+            id: String(product.id),
+            name: typeof product.name === "string" ? product.name : "",
+            description: typeof product.description === "string" ? product.description : "",
+            allergens: typeof product.allergens === "string" ? product.allergens : "",
+            image: typeof product.image === "string" ? product.image : "",
+            seasonal: Boolean(product.seasonal),
+            displayOrder: Number.isSafeInteger(Number(product.displayOrder))
+                ? Number(product.displayOrder)
+                : (index + 1) * 10
+        }))
+        .sort((a, b) => (a.displayOrder - b.displayOrder) || a.id.localeCompare(b.id));
+    response.json({
+        success: true,
+        products,
+        packages: Array.isArray(config.packages) ? config.packages : [],
+        order: config.order && typeof config.order === "object" ? config.order : {},
+        business: config.business && typeof config.business === "object" ? config.business : {}
+    });
 });
 
 app.post("/api/auth/signup", requireSameOrigin, authLimiter, async (request, response, next) => {
@@ -639,6 +711,49 @@ app.put("/api/admin/packages", requireSameOrigin, requireSignedIn, requireAdmin,
     }
 });
 
+app.get("/api/admin/products", requireSignedIn, requireAdmin, async (request, response) => {
+    try {
+        const result = await postAppsScriptAdmin("listProducts");
+        response.set("Cache-Control", "no-store").json({ products: result.products || [] });
+    } catch (error) {
+        console.error("Unable to load admin products:", error);
+        response.status(error.status || 502).json({ error: "Could not load product details." });
+    }
+});
+
+app.put("/api/admin/products", requireSameOrigin, requireSignedIn, requireAdmin, async (request, response) => {
+    const product = request.body?.product || {};
+    const id = typeof product.id === "string" ? product.id.trim() : "";
+    const name = typeof product.name === "string" ? product.name.trim() : "";
+    const description = typeof product.description === "string" ? product.description.trim() : "";
+    const allergens = typeof product.allergens === "string" ? product.allergens.trim() : "";
+    const image = typeof product.image === "string" ? product.image.trim().replace(/\\/g, "/") : "";
+    const available = Boolean(product.available);
+    const seasonal = Boolean(product.seasonal);
+    const displayOrder = Number(product.displayOrder);
+    if (!/^[a-z0-9-]{1,80}$/.test(id) || !name || name.length > 120 || /[\u0000-\u001f\u007f]/.test(name)) {
+        return response.status(400).json({ error: "Enter a valid product name." });
+    }
+    if (description.length > 2000 || allergens.length > 2000) {
+        return response.status(400).json({ error: "Description or allergen text is too long." });
+    }
+    if (image && (image.length > 200 || /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(image) || image.startsWith("//") || image.includes("..") || !/^images\/[a-zA-Z0-9._/-]+$/.test(image))) {
+        return response.status(400).json({ error: "Photo must be a path like images/puto.jpg, or left empty." });
+    }
+    if (!Number.isSafeInteger(displayOrder) || displayOrder < -999999 || displayOrder > 999999) {
+        return response.status(400).json({ error: "Display order must be a whole number." });
+    }
+    try {
+        const result = await postAppsScriptAdmin("updateProduct", {
+            product: { id, name, description, allergens, image, available, seasonal, displayOrder }
+        });
+        response.set("Cache-Control", "no-store").json(result);
+    } catch (error) {
+        console.error("Unable to update admin product:", error);
+        response.status(error.status || 502).json({ error: "Could not update product details." });
+    }
+});
+
 app.get("/api/admin/customers", requireSignedIn, requireAdmin, async (request, response) => {
     const search = String(request.query.search || "").trim().slice(0, 100).toLowerCase();
     try {
@@ -678,6 +793,23 @@ app.get("/api/admin/customers", requireSignedIn, requireAdmin, async (request, r
     } catch (error) {
         console.error("Unable to load admin customers:", error);
         response.status(error.status || 502).json({ error: "Could not load customer order history." });
+    }
+});
+
+app.get("/api/admin/customers/:email/orders", requireSignedIn, requireAdmin, async (request, response) => {
+    const email = String(request.params.email || "").trim().toLowerCase().slice(0, 254);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return response.status(400).json({ error: "A valid customer email is required." });
+    }
+    try {
+        const result = await postAppsScriptAdmin("listOrders");
+        const orders = (Array.isArray(result.orders) ? result.orders : []).filter(order =>
+            String(order.accountEmail || "").trim().toLowerCase() === email
+        );
+        response.set("Cache-Control", "no-store").json({ email, orders });
+    } catch (error) {
+        console.error("Unable to load customer orders:", error);
+        response.status(error.status || 502).json({ error: "Could not load orders for this customer." });
     }
 });
 

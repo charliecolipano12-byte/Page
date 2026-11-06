@@ -21,54 +21,69 @@
     <main>
         <section class="auth-header" aria-labelledby="signup-title">
             <h1 id="signup-title">Create your account</h1>
-            <p>Sign up with Ate My's Kakanin.</p>
+            <p>Sign up with Ate My's Kakanin. An account is needed to place an order.</p>
         </section>
 
         <section class="auth-form" aria-label="Sign-up form">
-            <div class="form-container">
-                <form id="signup-form" data-auth-form="signup" novalidate>
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <div class="input-wrapper">
-                            <input id="name" name="name" type="text" autocomplete="name" maxlength="100" required placeholder="Your name">
+            <div class="auth-layout">
+                <aside class="auth-side" aria-label="About your account">
+                    <img src="../images/kutsinta.jpg" alt="Kutsinta, a Filipino kakanin, served on a plate" width="900" height="675" loading="lazy">
+                    <p class="auth-side-text">An account lets us link your orders to you.</p>
+                </aside>
+                <div class="form-container">
+                    <form id="signup-form" data-auth-form="signup" novalidate>
+                        <p class="auth-summary-error" id="auth-summary" role="alert" aria-live="assertive" hidden></p>
+
+                        <div class="form-group" data-field="name">
+                            <label for="name">Name</label>
+                            <div class="input-wrapper">
+                                <input id="name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="name-error" placeholder="Your name">
+                            </div>
+                            <p class="field-error" id="name-error" aria-live="polite"></p>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="email">Email address</label>
-                        <div class="input-wrapper">
-                            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+                        <div class="form-group" data-field="email">
+                            <label for="email">Email address</label>
+                            <div class="input-wrapper">
+                                <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-error" placeholder="you@example.com">
+                            </div>
+                            <p class="field-error" id="email-error" aria-live="polite"></p>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="input-wrapper">
-                            <input id="password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required aria-describedby="password-hint" placeholder="At least 12 characters">
+                        <div class="form-group" data-field="password">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper">
+                                <input id="password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required aria-describedby="password-hint password-error" placeholder="At least 12 characters">
+                            </div>
+                            <small id="password-hint" class="form-hint">Use at least 12 characters.</small>
+                            <ul class="password-checklist" id="password-checklist" aria-label="Password requirements">
+                                <li id="pw-rule-length" data-state="pending"><span class="pw-rule-icon" aria-hidden="true"></span>12+ characters</li>
+                                <li id="pw-rule-match" data-state="pending"><span class="pw-rule-icon" aria-hidden="true"></span>Passwords match</li>
+                            </ul>
+                            <p class="field-error" id="password-error" aria-live="polite"></p>
                         </div>
-                        <small id="password-hint" class="form-hint">Use at least 12 characters.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm password</label>
-                        <div class="input-wrapper">
-                            <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required placeholder="Enter your password again">
+                        <div class="form-group" data-field="confirmPassword">
+                            <label for="confirm-password">Confirm password</label>
+                            <div class="input-wrapper">
+                                <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required aria-describedby="confirm-password-error" placeholder="Enter your password again">
+                            </div>
+                            <p class="field-error" id="confirm-password-error" aria-live="polite"></p>
                         </div>
-                        <label class="checkbox-label"><input type="checkbox" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'; document.getElementById('confirm-password').type = this.checked ? 'text' : 'password'"> Show password</label>
-                    </div>
 
-                    <div class="form-group privacy-box">
-                        <label for="accountPrivacy" class="checkbox-label">
-                            <input id="accountPrivacy" name="accountPrivacy" type="checkbox" required>
-                            I understand my name and email are stored to sign in to this account. My password is stored as a one-way hash, not in readable form. My account remains until I delete it; deleting it does not delete separate order records.
-                        </label>
-                    </div>
+                        <div class="form-group privacy-box" data-field="accountPrivacy">
+                            <label for="accountPrivacy" class="checkbox-label">
+                                <input id="accountPrivacy" name="accountPrivacy" type="checkbox" required aria-describedby="accountPrivacy-error">
+                                I understand my name and email are stored to sign in to this account. My password is stored as a one-way hash, not in readable form. My account remains until I delete it; deleting it does not delete separate order records.
+                            </label>
+                            <p class="field-error" id="accountPrivacy-error" aria-live="polite"></p>
+                        </div>
 
-                    <button class="btn btn-primary btn-full" type="submit">Create account</button>
-                    <p class="form-links" id="auth-message" role="status" aria-live="polite"></p>
-                </form>
-                <p class="form-links">Already have an account? <a href="../login/">Login</a></p>
-                <p class="form-links"><a href="../index.html">Return to the home page</a></p>
+                        <button class="btn btn-primary btn-full" type="submit">Create account</button>
+                        <p class="form-links" id="auth-message" role="status" aria-live="polite"></p>
+                    </form>
+                    <p class="form-links">Already have an account? <a href="../login/">Login</a></p>
+                </div>
             </div>
         </section>
     </main>
@@ -79,5 +94,6 @@
 
     <script src="../script.js"></script>
     <script src="../auth.js"></script>
+    <script src="../show-password.js"></script>
 </body>
 </html>

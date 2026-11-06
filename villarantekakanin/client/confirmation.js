@@ -32,7 +32,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         addRow("Preferred pickup time", order.timeSlot || "");
         addRow("Payment on pickup", order.paymentMethod || "");
         const paymentInfo = document.createElement("p");
-        paymentInfo.textContent = "GCash: Mylen Villarante, 0946 435 1750. TODO: A GCash QR code was not provided.";
+        // A GCash QR code has not been provided yet; add it here when available.
+        paymentInfo.textContent = "GCash: Mylen Villarante, 0946 435 1750.";
         summary.appendChild(paymentInfo);
         const pickupInfo = document.createElement("p");
         pickupInfo.textContent = "Pickup only at P-2 Cawayan, Calinan, Davao City. We will contact you to confirm your requested schedule.";

@@ -14,10 +14,11 @@ The database defaults to `../.ate-mys-kakanin-auth/auth.sqlite`, outside the pub
 
 ## Security hygiene
 
-- Never commit `.env`. It is listed in `.gitignore`; keep real secrets only there.
-- Generate `SESSION_SECRET` and `APPS_SCRIPT_ADMIN_SECRET` as random values of at least 32 characters. Use `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`.
-- Set the same `APPS_SCRIPT_ADMIN_SECRET` value in the Apps Script project's Script Properties as `ADMIN_API_SECRET`, so the Node app and Apps Script agree.
-- Replace the placeholder `APPS_SCRIPT_URL` in `.env` with your deployed Apps Script web app URL.
+- Keep real secret values only in `.env`; never commit `.env` (it must remain in `.gitignore`). `.env.example` must contain placeholders only.
+- Generate new random values for `SESSION_SECRET` and `APPS_SCRIPT_ADMIN_SECRET` (at least 32 characters), for example: `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`.
+- Set the same value used for `APPS_SCRIPT_ADMIN_SECRET` in `.env` as `ADMIN_API_SECRET` in the Apps Script project's Script Properties so the Node app and Apps Script agree.
+
+## Deployment notes
 
 - Deploy this as a Node.js application; static-only hosting cannot run the authentication API.
 - Use HTTPS in production so the session cookie is Secure. Keep `SESSION_SECRET` private and stable across restarts. Set `TRUST_PROXY=1` only when the app is behind one trusted reverse proxy.

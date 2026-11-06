@@ -51,14 +51,39 @@ class Cart {
         return `${packageId}|${[...varieties].sort().join(",")}`;
     }
 
-    validate(packageId, varieties, qty) {
+    validate(packageId, varieties, qty, options = {}) {
         const packages = typeof window !== "undefined" && window.PACKAGES ? window.PACKAGES : [];
         const products = typeof window !== "undefined" && window.PRODUCTS ? window.PRODUCTS : [];
+        const allowUnknownProducts = options.allowUnknownProducts === true;
         if (!packages.some(p => p.id === packageId)) throw new Error("Invalid package.");
         if (!Array.isArray(varieties) || varieties.length < 1 || varieties.length > 3) throw new Error("Choose 1 to 3 varieties.");
         if (new Set(varieties).size !== varieties.length) throw new Error("Duplicate variety.");
-        if (!varieties.every(v => products.some(p => p.id === v))) throw new Error("Invalid variety.");
+        // When a catalog is loaded, reject unknown/unavailable varieties. If the catalog
+        // has not loaded yet (e.g. storage restore before config), callers may opt in to
+        // structure-only validation and revalidate once the catalog is available.
+        if (!allowUnknownProducts && products.length > 0 && !varieties.every(v => products.some(p => p.id === v))) {
+            throw new Error("That variety is not available.");
+        }
         if (!Number.isInteger(qty) || qty < 1) throw new Error("Invalid quantity.");
+    }
+
+    validateItems(items = this.items) {
+        if (!Array.isArray(items)) throw new Error("Invalid cart.");
+        items.forEach(item => this.validate(item.packageId, item.varieties, item.qty));
+    }
+
+    removeUnavailable(catalogProducts = (typeof window !== "undefined" && window.PRODUCTS ? window.PRODUCTS : [])) {
+        if (!Array.isArray(catalogProducts) || catalogProducts.length === 0) return 0;
+        const available = new Set(catalogProducts.map(p => p && p.id).filter(Boolean));
+        const before = this.items.length;
+        this.items = this.items.filter(item =>
+            item &&
+            Array.isArray(item.varieties) &&
+            item.varieties.every(v => available.has(v))
+        );
+        const removed = before - this.items.length;
+        if (removed > 0) this.save();
+        return removed;
     }
 
     add(packageId, varieties, qty = 1) {

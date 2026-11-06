@@ -23,15 +23,26 @@ const OrderService = {
     mergePublicConfig(serverConfig) {
         const baseProducts = Array.isArray(window.PRODUCTS) ? window.PRODUCTS.slice() : [];
         const basePackages = Array.isArray(window.PACKAGES) ? window.PACKAGES.slice() : [];
-        const map = {};
-        (serverConfig.products || []).forEach(product => {
-            map[product.id] = product;
-        });
+        const fallbackById = Object.fromEntries(baseProducts.map(product => [product.id, product]));
 
-        const merged = baseProducts.map(product => ({
-            ...product,
-            ...(map[product.id] || {})
-        }));
+        let products = baseProducts;
+        if (Array.isArray(serverConfig.products)) {
+            // Server is the source of availability: never let static fallback bring back
+            // unavailable items. Keep fallback copy (description/allergens/image) only
+            // for IDs the server still returns.
+            products = serverConfig.products
+                .filter(product => product && typeof product.id === "string")
+                .map(product => {
+                    const fallback = fallbackById[product.id] || {};
+                    return {
+                        ...fallback,
+                        ...product,
+                        id: product.id,
+                        seasonal: Boolean(product.seasonal || fallback.seasonal)
+                    };
+                });
+        }
+
         const packageMap = {};
         (serverConfig.packages || []).forEach(packageInfo => {
             packageMap[packageInfo.id] = packageInfo;
@@ -42,7 +53,7 @@ const OrderService = {
         }));
 
         if (typeof window !== "undefined") {
-            window.PRODUCTS = merged;
+            window.PRODUCTS = products;
             window.PACKAGES = mergedPackages;
         }
 
@@ -53,7 +64,7 @@ const OrderService = {
             });
         }
 
-        return merged;
+        return products;
     },
 
     async fetchJson(url, options = {}) {
@@ -93,28 +104,40 @@ const OrderService = {
     },
 
     async getPublicConfig() {
-        if (this.isDemoMode()) {
-            const merged = Array.isArray(window.PRODUCTS) ? window.PRODUCTS.slice() : [];
-            const fallback = {
-                products: merged,
-                packages: Array.isArray(window.PACKAGES) ? window.PACKAGES.slice() : [],
+        try {
+            const payload = await this.fetchJson("/api/products", {
+                method: "GET",
+                timeoutMs: 8000,
+                credentials: "same-origin",
+                cache: "no-store",
+                headers: { Accept: "application/json" }
+            });
+            if (!payload || payload.success === false || !Array.isArray(payload.products)) {
+                throw new Error("Product catalog unavailable.");
+            }
+            const products = this.mergePublicConfig(payload || {});
+            sessionStorage.setItem("vk_public_config", JSON.stringify({
+                products,
+                packages: window.PACKAGES || [],
                 order: window.CONFIG && window.CONFIG.order ? window.CONFIG.order : {},
                 business: window.CONFIG && window.CONFIG.business ? window.CONFIG.business : {}
-            };
-            sessionStorage.setItem("vk_public_config", JSON.stringify(fallback));
-            return fallback;
+            }));
+            return { ...payload, products, packages: window.PACKAGES || [] };
+        } catch (error) {
+            if (this.isDemoMode()) {
+                const merged = Array.isArray(window.PRODUCTS) ? window.PRODUCTS.slice() : [];
+                const fallback = {
+                    success: true,
+                    products: merged,
+                    packages: Array.isArray(window.PACKAGES) ? window.PACKAGES.slice() : [],
+                    order: window.CONFIG && window.CONFIG.order ? window.CONFIG.order : {},
+                    business: window.CONFIG && window.CONFIG.business ? window.CONFIG.business : {}
+                };
+                sessionStorage.setItem("vk_public_config", JSON.stringify(fallback));
+                return fallback;
+            }
+            throw error;
         }
-
-        const url = this.getBackendUrl("config");
-        const payload = await this.fetchJson(url, { method: "GET", timeoutMs: 20000 });
-        const merged = this.mergePublicConfig(payload || {});
-        sessionStorage.setItem("vk_public_config", JSON.stringify({
-            products: merged,
-            packages: window.PACKAGES || [],
-            order: window.CONFIG && window.CONFIG.order ? window.CONFIG.order : {},
-            business: window.CONFIG && window.CONFIG.business ? window.CONFIG.business : {}
-        }));
-        return { ...payload, products: merged, packages: window.PACKAGES || [] };
     },
 
     async submitOrder(order) {

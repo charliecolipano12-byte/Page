@@ -163,6 +163,14 @@ document.addEventListener("DOMContentLoaded", async function() {
         console.error("Unable to verify customer sign-in before checkout:", error);
         demoWarning.hidden = false;
         demoWarning.textContent = "We could not verify your sign-in status. Please try again or log in before placing an order.";
+        emptyCartState.replaceChildren(
+            document.createTextNode("We could not check your sign-in. "),
+            Object.assign(document.createElement("a"), { href: "checkout.html", textContent: "Refresh the page" }),
+            document.createTextNode(" or "),
+            Object.assign(document.createElement("a"), { href: "/login/?returnTo=%2Fcheckout.html", textContent: "log in" }),
+            document.createTextNode(" to continue.")
+        );
+        emptyCartState.hidden = false;
         return;
     }
 

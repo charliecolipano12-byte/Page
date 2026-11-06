@@ -77,7 +77,8 @@ const PRODUCTS = [
         id: "bibingka",
         name: "Bibingka (Seasonal)",
         description: "Available during the Christmas season and popular after Simbang Gabi. Please order in advance.",
-        allergens: "TODO: Confirm Bibingka ingredients and allergen information.",
+        // Owner still needs to confirm Bibingka ingredients; replace this text once known.
+        allergens: "Please ask us about Bibingka ingredients and allergens before ordering.",
         image: "images/bibingka.jpg",
         seasonal: true
     }
